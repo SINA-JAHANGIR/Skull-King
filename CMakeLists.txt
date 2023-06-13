@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
         data.cpp
         person.h
         person.cpp
+        player.h
+        player.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
