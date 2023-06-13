@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+#include "card.h"
+#include "player.h"
+
 namespace Ui {
 class game;
 }
@@ -17,6 +20,12 @@ public:
 
 private:
     Ui::game *ui;
+    // Property :
+    card all_cards[42];
+    player player1;
+    player player2;
+    // Functions :
+    void set_all_cards();
 };
 
 #endif // GAME_H
