@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         card.cpp
         data.h
         data.cpp
+        person.h
+        person.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
