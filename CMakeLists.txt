@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         card.h
         card.cpp
+        data.h
+        data.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
