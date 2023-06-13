@@ -17,6 +17,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        card.h
+        card.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -43,6 +45,9 @@ else()
 endif()
 
 target_link_libraries(Skull-King PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+find_package(Qt6 REQUIRED COMPONENTS Network)
+target_link_libraries(Skull-King PRIVATE Qt6::Network)
 
 set_target_properties(Skull-King PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
