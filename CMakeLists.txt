@@ -28,6 +28,9 @@ set(PROJECT_SOURCES
         game.h
         game.cpp
         game.ui
+        server.h
+        server.cpp
+        server.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
