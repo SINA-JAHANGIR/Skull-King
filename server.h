@@ -5,6 +5,10 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QMessageBox>
+#include <QByteArray>
+#include <QDataStream>
+
+#include "card.h"
 
 namespace Ui {
 class server;
@@ -25,6 +29,9 @@ private:
     Ui::server *ui;
     QTcpServer *game_server;
     QTcpSocket *client_socket;
+    // Functions :
+    QByteArray card_to_qbytearray(const card&);
+    card qbytearray_to_card(QByteArray&);
 };
 
 #endif // SERVER_H

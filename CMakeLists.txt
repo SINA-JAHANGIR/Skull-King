@@ -37,6 +37,7 @@ set(PROJECT_SOURCES
         start.h
         start.cpp
         start.ui
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
