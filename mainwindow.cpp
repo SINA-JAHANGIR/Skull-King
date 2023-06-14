@@ -13,3 +13,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_btn_start_clicked()
+{
+    start_page = new start(this);
+    this->hide();
+    start_page->show();
+}
+

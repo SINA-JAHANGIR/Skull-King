@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>start</class>
+ <widget class="QMainWindow" name="start">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,17 +14,30 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="btn_start">
+   <widget class="QPushButton" name="btn_host">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>130</y>
-      <width>271</width>
-      <height>91</height>
+      <x>70</x>
+      <y>180</y>
+      <width>301</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="text">
-     <string>Start</string>
+     <string>Host</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_join">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>180</y>
+      <width>301</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Join</string>
     </property>
    </widget>
   </widget>

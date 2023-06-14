@@ -34,6 +34,9 @@ set(PROJECT_SOURCES
         client.h
         client.cpp
         client.ui
+        start.h
+        start.cpp
+        start.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
