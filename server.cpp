@@ -18,6 +18,7 @@ server::~server()
 
 void server::connection_new(){
     client_socket = game_server->nextPendingConnection();
+    ready = true;
 }
 
 QByteArray server::card_to_qbytearray(const card& input){
@@ -44,3 +45,14 @@ card server::qbytearray_to_card(QByteArray& input)
 
     return output;
 }
+
+void server::on_btn_start_clicked()
+{
+    // if (ready)
+    // {
+           game_page = new game(this);
+           this->close();
+           game_page->show();
+    // }
+}
+

@@ -1,11 +1,17 @@
 #include "game.h"
 #include "ui_game.h"
+#include <QScreen>
 
 game::game(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::game)
 {
     ui->setupUi(this);
+    this->setFixedSize(this->size());
+    const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+    const int x = (screenGeometry.width() - width()) / 2;
+    const int y = (screenGeometry.height() - height()) / 2;
+    move(x, y);
 }
 
 game::~game()
@@ -51,3 +57,4 @@ void game::set_all_cards()
         all_cards[i].set_type(queen);
     }
 }
+

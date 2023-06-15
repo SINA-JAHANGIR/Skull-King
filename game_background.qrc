@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/game_bg_image"/>
+    <qresource prefix="/">
+        <file>photos/playground.png</file>
+    </qresource>
+</RCC>

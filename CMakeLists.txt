@@ -37,7 +37,7 @@ set(PROJECT_SOURCES
         start.h
         start.cpp
         start.ui
-
+        game_background.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

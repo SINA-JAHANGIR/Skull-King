@@ -14,7 +14,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_btn_start_clicked()
+void MainWindow::on_btn_play_clicked()
 {
     start_page = new start(this);
     this->hide();
