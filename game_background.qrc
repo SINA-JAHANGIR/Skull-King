@@ -2,5 +2,25 @@
     <qresource prefix="/game_bg_image"/>
     <qresource prefix="/">
         <file>photos/playground.png</file>
+        <file>photos/0.png</file>
+        <file>photos/1.png</file>
+        <file>photos/2.png</file>
+        <file>photos/3.png</file>
+        <file>photos/4.png</file>
+        <file>photos/5.png</file>
+        <file>photos/6.png</file>
+        <file>photos/7.png</file>
+        <file>photos/8.png</file>
+        <file>photos/9.png</file>
+        <file>photos/click 0.png</file>
+        <file>photos/click 1.png</file>
+        <file>photos/click 2.png</file>
+        <file>photos/click 3.png</file>
+        <file>photos/click 4.png</file>
+        <file>photos/click 5.png</file>
+        <file>photos/click 6.png</file>
+        <file>photos/click 7.png</file>
+        <file>photos/click 8.png</file>
+        <file>photos/click 9.png</file>
     </qresource>
 </RCC>

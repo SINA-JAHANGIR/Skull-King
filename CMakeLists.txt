@@ -38,6 +38,8 @@ set(PROJECT_SOURCES
         start.cpp
         start.ui
         game_background.qrc
+        customized_button.h
+        customized_button.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

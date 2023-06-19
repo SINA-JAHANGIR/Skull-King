@@ -2,7 +2,9 @@
 #define GAME_H
 
 #include <QMainWindow>
+#include <QVector>
 
+#include "customized_button.h"
 #include "card.h"
 #include "player.h"
 
@@ -19,6 +21,7 @@ public:
     ~game();
 
 private slots:
+    void slo_forecast(int);
 
 private:
     Ui::game *ui;
@@ -26,8 +29,10 @@ private:
     card all_cards[42];
     player player1;
     player player2;
+    QVector<customized_button *> all_button;
     // Functions :
     void set_all_cards();
+    void forecast(int);
 };
 
 #endif // GAME_H
