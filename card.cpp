@@ -14,6 +14,14 @@ card::card(const card& input)
     this->set_selected(input.get_selected());
 }
 
+card card::operator=(const card& input)
+{
+    this->set_type(input.get_type());
+    this->set_value(input.get_value());
+    this->set_selected(input.get_selected());
+    return *this;
+}
+
 void card::set_type(const card_type& input)
 {
     this->type = input;
@@ -42,4 +50,32 @@ void card::set_selected(const bool& input)
 const bool card::get_selected() const
 {
     return selected;
+}
+
+QString card::get_type_string()
+{
+    switch (type)
+    {
+    case parrot:
+        return "parrot";
+    break;
+    case gold:
+        return "gold";
+    break;
+    case map:
+        return "map";
+    break;
+    case flag:
+        return "flag";
+    break;
+    case king:
+        return "king";
+    break;
+    case queen:
+        return "queen";
+    break;
+    case pirate:
+        return "pirate";
+    break;
+    }
 }

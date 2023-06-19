@@ -53,6 +53,7 @@ void server::on_btn_start_clicked()
            game_page = new game(this);
            this->close();
            game_page->show();
+           game_page->first_round();
     // }
 }
 

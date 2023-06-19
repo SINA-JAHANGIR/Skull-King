@@ -19,6 +19,8 @@ class game : public QMainWindow
 public:
     explicit game(QWidget *parent = nullptr);
     ~game();
+    // Functions :
+    void first_round();
 
 private slots:
     void slo_forecast(int);
@@ -27,9 +29,10 @@ private:
     Ui::game *ui;
     // Property :
     card all_cards[42];
+    customized_button * all_cards_btn[42];
     player player1;
     player player2;
-    QVector<customized_button *> all_button;
+    QVector<customized_button *> all_forecast_btn;
     // Functions :
     void set_all_cards();
     void forecast(int);
