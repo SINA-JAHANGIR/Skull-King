@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1279</width>
-    <height>745</height>
+    <width>1320</width>
+    <height>766</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1281</width>
-      <height>721</height>
+      <width>1321</width>
+      <height>741</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -49,17 +49,6 @@
      </rect>
     </property>
     <layout class="QHBoxLayout" name="hl_forecast_btn"/>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>160</y>
-      <width>451</width>
-      <height>211</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="hl_all_cards_btn"/>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

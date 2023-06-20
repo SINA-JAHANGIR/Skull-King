@@ -21,9 +21,11 @@ public:
     card get_btn_card();
     void change_obj_name();
 signals:
-    void sig_button_clicked(int);
+    void sig_number_clicked(int);
+    void sig_card_clicked(card);
 private slots:
-    void slo_handle_click();
+    void slo_number_clicked();
+    void slo_card_clicked();
 };
 
 #endif // CUSTOMIZED_BUTTON_H

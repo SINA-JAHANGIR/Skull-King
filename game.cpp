@@ -1,6 +1,14 @@
 #include "game.h"
 #include "ui_game.h"
 #include <QScreen>
+#include <QLabel>
+#include <QPixmap>
+
+#define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
+
+// size of card :
+const int w = 200 , a = (500/400) , h = a*w;
+//
 
 game::game(QWidget *parent) :
     QMainWindow(parent),
@@ -12,7 +20,6 @@ game::game(QWidget *parent) :
     const int x = (screenGeometry.width() - width()) / 2;
     const int y = (screenGeometry.height() - height()) / 2;
     move(x, y);
-
 }
 
 game::~game()
@@ -30,6 +37,8 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 8 ; i < 16 ; i++)
     {
@@ -38,6 +47,8 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 16 ; i < 24 ; i++)
     {
@@ -46,6 +57,8 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 24 ; i < 32 ; i++)
     {
@@ -54,6 +67,8 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 32 ; i < 36 ; i++)
     {
@@ -62,6 +77,8 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 36 ; i < 39 ; i++)
     {
@@ -70,6 +87,8 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 39 ; i < 42 ; i++)
     {
@@ -78,7 +97,11 @@ void game::set_all_cards()
         customized_button *new_button = new customized_button(all_cards[i]);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
+        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        all_cards_btn[i]->setParent(ui->centralwidget);
     }
+    for (int j = 0 ; j < 42 ; j++)
+        all_cards_btn[j]->setFixedSize(w,h);
 }
 
 void game::forecast(int input)
@@ -103,12 +126,19 @@ void game::forecast(int input)
 
 void game::slo_forecast(int input)
 {
-    //get number of hands
+    // get number of hands :
+}
+
+void game::slo_selected_card(card input)
+{
+    // get selected card :
 }
 
 
 void game::first_round()
 {
+
+    set_all_cards();
     srand(time(NULL));
     int index[2] = {0,0} ;
     while(index[0]==index[1])
@@ -116,18 +146,15 @@ void game::first_round()
         index[0] = rand()%8;
         index[1] = ((rand() + 13)*13)%8;
     }
-    for(int i = 0 ; i < 2 ; i++)
-    {
-        customized_button *new_button = new customized_button(this);
-        new_button->setObjectName(QString::number(i));
-        //new_button->button_number=i;
-        ui->hl_all_cards_btn->addWidget(new_button);
-        const int x = 200 , a = (744/606);
-        new_button->setFixedSize(x,a*x);
-        QString temp="QPushButton{border-image: url(:/photos/back-of-card.png);}";
-        new_button->setStyleSheet(temp);
-        all_forecast_btn.append(new_button);
-        //connect(new_button,SIGNAL(sig_button_clicked(int)),this,SLOT(slo_forecast(int)));
-    }
+    player1.cards.append(all_cards_btn[index[0]]);
+    player2.cards.append(all_cards_btn[index[1]]);
+    all_cards_btn[index[0]]->setStyleSheet(BACK);
+    all_cards_btn[index[1]]->setStyleSheet(BACK);
+    all_cards_btn[index[0]]->setParent(ui->centralwidget);
+    all_cards_btn[index[1]]->setParent(ui->centralwidget);
+    all_cards_btn[index[0]]->show();
+    all_cards_btn[index[1]]->show();
+    all_cards_btn[index[0]]->move(width()/2-w/2,height()/2-h/2);
+    all_cards_btn[index[1]]->move(width()/2-w/2,height()/2-h/2);
 }
 

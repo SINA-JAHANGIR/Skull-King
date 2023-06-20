@@ -10,9 +10,10 @@ class player
 {
 private:
     QString username;
-    QVector<customized_button*> cards;
 public:
+    QVector<customized_button*> cards;
     player();
+    // Functions :
     void set_username(QString);
     QString get_username();
     void set_cards(QVector<customized_button*>);

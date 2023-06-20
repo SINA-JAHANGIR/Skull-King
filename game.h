@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QVector>
+#include <QVBoxLayout>
 
 #include "customized_button.h"
 #include "card.h"
@@ -24,6 +25,7 @@ public:
 
 private slots:
     void slo_forecast(int);
+    void slo_selected_card(card);
 
 private:
     Ui::game *ui;

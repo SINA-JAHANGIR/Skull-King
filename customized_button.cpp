@@ -2,17 +2,24 @@
 
 customized_button::customized_button(QWidget *parent)
 {
-//    if (button_number>0)
-//    {connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_handle_click()));}
-//    else
-//    {
-//        connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_handle_click()));
-//    }
+    if (button_number>0)
+    {
+        connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_number_clicked()));
+    }
+    else
+    {
+        connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_card_clicked()));
+    }
 }
-void customized_button::slo_handle_click()
+void customized_button::slo_number_clicked()
 
 {
-    emit sig_button_clicked(button_number);
+    emit sig_number_clicked(button_number);
+}
+
+void customized_button::slo_card_clicked()
+{
+    emit sig_card_clicked(button_card);
 }
 
 customized_button::customized_button(int input)
