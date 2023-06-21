@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QVector>
 #include <QVBoxLayout>
+#include <QPropertyAnimation>
 
 #include "customized_button.h"
 #include "card.h"
@@ -21,7 +22,10 @@ public:
     explicit game(QWidget *parent = nullptr);
     ~game();
     // Functions :
-    void first_round();
+    void start();
+    void round(int);
+    void make_card(int);
+    void dealer_animation();
 
 private slots:
     void slo_forecast(int);
@@ -35,6 +39,7 @@ private:
     player player1;
     player player2;
     QVector<customized_button *> all_forecast_btn;
+    QVector<QPropertyAnimation *> all_move_animation;
     // Functions :
     void set_all_cards();
     void forecast(int);

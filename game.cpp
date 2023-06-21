@@ -20,6 +20,7 @@ game::game(QWidget *parent) :
     const int x = (screenGeometry.width() - width()) / 2;
     const int y = (screenGeometry.height() - height()) / 2;
     move(x, y);
+    set_all_cards();
 }
 
 game::~game()
@@ -38,7 +39,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 8 ; i < 16 ; i++)
     {
@@ -48,7 +49,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 16 ; i < 24 ; i++)
     {
@@ -58,7 +59,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 24 ; i < 32 ; i++)
     {
@@ -68,7 +69,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 32 ; i < 36 ; i++)
     {
@@ -78,7 +79,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 36 ; i < 39 ; i++)
     {
@@ -88,7 +89,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int i = 39 ; i < 42 ; i++)
     {
@@ -98,7 +99,7 @@ void game::set_all_cards()
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
         connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
-        all_cards_btn[i]->setParent(ui->centralwidget);
+//        all_cards_btn[i]->setParent(ui->centralwidget);
     }
     for (int j = 0 ; j < 42 ; j++)
         all_cards_btn[j]->setFixedSize(w,h);
@@ -135,26 +136,78 @@ void game::slo_selected_card(card input)
 }
 
 
-void game::first_round()
+void game::round(int n)
 {
+    make_card(n);
+    dealer_animation();
+}
 
-    set_all_cards();
+void game::make_card(int n)
+{
     srand(time(NULL));
-    int index[2] = {0,0} ;
-    while(index[0]==index[1])
+    int *index = new int[2*n];
+    if(n == 1)
     {
-        index[0] = rand()%8;
-        index[1] = ((rand() + 13)*13)%8;
+        do{
+            index[0] = rand()%8;
+            index[1] = ((rand() + 13)*13)%8;
+        }while(index[0]==index[1]);
     }
-    player1.cards.append(all_cards_btn[index[0]]);
-    player2.cards.append(all_cards_btn[index[1]]);
-    all_cards_btn[index[0]]->setStyleSheet(BACK);
-    all_cards_btn[index[1]]->setStyleSheet(BACK);
-    all_cards_btn[index[0]]->setParent(ui->centralwidget);
-    all_cards_btn[index[1]]->setParent(ui->centralwidget);
-    all_cards_btn[index[0]]->show();
-    all_cards_btn[index[1]]->show();
-    all_cards_btn[index[0]]->move(width()/2-w/2,height()/2-h/2);
-    all_cards_btn[index[1]]->move(width()/2-w/2,height()/2-h/2);
+    else
+    {
+        for(int i = 0 ; i < 2*n ; i++)
+        {
+            index[i] = rand()%42;
+            for(int j = 0 ; j < i ; j++)
+            {
+                if(index[i] == index[j])
+                {
+                    i--;
+                    break;
+                }
+            }
+        }
+    }
+    for(int i = 0 ; i < n ; i++)
+    {
+        player1.cards.append(all_cards_btn[index[i]]);
+        all_cards_btn[index[i]]->setStyleSheet(BACK);
+        all_cards_btn[index[i]]->setParent(ui->centralwidget);
+        all_cards_btn[index[i]]->show();
+    }
+    for(int i = n ; i < 2*n ; i++)
+    {
+        player2.cards.append(all_cards_btn[index[i]]);
+        all_cards_btn[index[i]]->setStyleSheet(BACK);
+        all_cards_btn[index[i]]->setParent(ui->centralwidget);
+        all_cards_btn[index[i]]->show();
+    }
+    delete[] index;
+}
+
+void game::dealer_animation()
+{
+    int s = player1.cards.size();
+
+    for(int i = 0 ; i < s ; i++){
+        QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
+        QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
+        player1_animation->setDuration(1000+(i+1)*100);
+        player1_animation->setStartValue(QRect(width()/2-w/2, height()/2-h/2, w, h));
+        player1_animation->setEndValue(QRect((width()/2-w/2), height()-h-50, w, h));
+        all_move_animation.append(player1_animation);
+        player2_animation->setDuration(1000+(i+1)*100);
+        player2_animation->setStartValue(QRect(width()/2-w/2, height()/2-h/2, w, h));
+        player2_animation->setEndValue(QRect((width()/2-w/2), 20, w, h));
+        all_move_animation.append(player2_animation);
+
+        player2_animation->start();
+        player1_animation->start();
+    }
+}
+
+void game::start()
+{
+    round(7);
 }
 
