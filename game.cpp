@@ -187,9 +187,8 @@ void game::make_card(int n)
 
 void game::dealer_animation()
 {
-    int s = player1.cards.size();
-
-    for(int i = 0 ; i < s ; i++){
+    int size = player1.cards.size();
+    for(int i = 0 ; i < size ; i++){
         QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
         QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
         player1_animation->setDuration(1000+(i+1)*100);
@@ -200,9 +199,37 @@ void game::dealer_animation()
         player2_animation->setStartValue(QRect(width()/2-w/2, height()/2-h/2, w, h));
         player2_animation->setEndValue(QRect((width()/2-w/2), 20, w, h));
         all_move_animation.append(player2_animation);
-
-        player2_animation->start();
         player1_animation->start();
+        player2_animation->start();
+        if ( i == size - 1)
+            connect(player1_animation,SIGNAL(finished()),this,SLOT(slo_arrange_card()));
+    }
+}
+
+void game::slo_arrange_card()
+{
+    int size = all_move_animation.size();
+    for (int i = 0 ; i < size ; i++)
+        delete all_move_animation[i];
+    all_move_animation.clear();
+
+    size = player1.cards.size();
+    for (int i = 0 ; i < size ; i++)
+    {
+        QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
+        QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
+
+        player1_animation->setDuration(1000);
+        int x = (width()/2)-((size+1)*(w/4))+(i*w/4);
+        player1_animation->setStartValue(QRect((width()/2-w/2),height()-h-50, w, h));
+        player1_animation->setEndValue(QRect(x,height()-h-50,w,h));
+        all_move_animation.append(player1_animation);
+        player2_animation->setDuration(1000);
+        player2_animation->setStartValue(QRect((width()/2-w/2), 20, w, h));
+        player2_animation->setEndValue(QRect(x,20,w,h));
+        all_move_animation.append(player2_animation);
+        player1_animation->start();
+        player2_animation->start();
     }
 }
 

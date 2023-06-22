@@ -30,6 +30,7 @@ public:
 private slots:
     void slo_forecast(int);
     void slo_selected_card(card);
+    void slo_arrange_card();
 
 private:
     Ui::game *ui;
