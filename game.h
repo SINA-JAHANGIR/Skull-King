@@ -35,8 +35,8 @@ private slots:
 private:
     Ui::game *ui;
     // Property :
-    card all_cards[42];
-    customized_button * all_cards_btn[42];
+    card all_cards[56];
+    customized_button * all_cards_btn[56];
     player player1;
     player player2;
     QVector<customized_button *> all_forecast_btn;
@@ -44,6 +44,7 @@ private:
     // Functions :
     void set_all_cards();
     void forecast(int);
+    void change_StyleSheet(customized_button*);
 };
 
 #endif // GAME_H

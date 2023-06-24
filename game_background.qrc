@@ -23,5 +23,72 @@
         <file>photos/click 8.png</file>
         <file>photos/click 9.png</file>
         <file>photos/back-of-card.png</file>
+        <file>photos/coin.png</file>
+        <file>photos/flag 1.png</file>
+        <file>photos/flag 2.png</file>
+        <file>photos/flag 3.png</file>
+        <file>photos/flag 4.png</file>
+        <file>photos/flag 5.png</file>
+        <file>photos/flag 6.png</file>
+        <file>photos/flag 7.png</file>
+        <file>photos/flag 8.png</file>
+        <file>photos/flag 9.png</file>
+        <file>photos/flag 10.png</file>
+        <file>photos/flag 11.png</file>
+        <file>photos/flag.png</file>
+        <file>photos/frame.png</file>
+        <file>photos/game logo.png</file>
+        <file>photos/gold 1.png</file>
+        <file>photos/gold 2.png</file>
+        <file>photos/gold 3.png</file>
+        <file>photos/gold 4.png</file>
+        <file>photos/gold 5.png</file>
+        <file>photos/gold 6.png</file>
+        <file>photos/gold 7.png</file>
+        <file>photos/gold 8.png</file>
+        <file>photos/gold 9.png</file>
+        <file>photos/gold 10.png</file>
+        <file>photos/gold 11.png</file>
+        <file>photos/gold.png</file>
+        <file>photos/king 1.png</file>
+        <file>photos/king 2.png</file>
+        <file>photos/king 3.png</file>
+        <file>photos/king 4.png</file>
+        <file>photos/king.png</file>
+        <file>photos/map 1.png</file>
+        <file>photos/map 2.png</file>
+        <file>photos/map 3.png</file>
+        <file>photos/map 4.png</file>
+        <file>photos/map 5.png</file>
+        <file>photos/map 6.png</file>
+        <file>photos/map 7.png</file>
+        <file>photos/map 8.png</file>
+        <file>photos/map 9.png</file>
+        <file>photos/map 10.png</file>
+        <file>photos/map 11.png</file>
+        <file>photos/map.png</file>
+        <file>photos/parrot 1.png</file>
+        <file>photos/parrot 2.png</file>
+        <file>photos/parrot 3.png</file>
+        <file>photos/parrot 4.png</file>
+        <file>photos/parrot 5.png</file>
+        <file>photos/parrot 6.png</file>
+        <file>photos/parrot 7.png</file>
+        <file>photos/parrot 8.png</file>
+        <file>photos/parrot 9.png</file>
+        <file>photos/parrot 10.png</file>
+        <file>photos/parrot 11.png</file>
+        <file>photos/parrot.png</file>
+        <file>photos/pirate 1.png</file>
+        <file>photos/pirate 2.png</file>
+        <file>photos/pirate 3.png</file>
+        <file>photos/pirate 4.png</file>
+        <file>photos/pirate.png</file>
+        <file>photos/preview.png</file>
+        <file>photos/queen 1.png</file>
+        <file>photos/queen 2.png</file>
+        <file>photos/queen 3.png</file>
+        <file>photos/queen 4.png</file>
+        <file>photos/queen.png</file>
     </qresource>
 </RCC>
