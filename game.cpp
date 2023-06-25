@@ -185,7 +185,8 @@ void game::make_card(int n)
             all_cards_btn[index[i]]->show();
         }
         delete[] index;
-    }
+    }      
+    emit sig_send_card();
 }
 
 void game::change_StyleSheet(customized_button* input)

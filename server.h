@@ -7,8 +7,10 @@
 #include <QMessageBox>
 #include <QByteArray>
 #include <QDataStream>
-#include "game.h"
 
+
+#include "game.h"
+#include "customized_button.h"
 #include "card.h"
 
 namespace Ui {
@@ -25,6 +27,7 @@ public:
 
 public slots:
     void connection_new();
+    void slo_send_card();
 
 private slots:
     void on_btn_start_clicked();
@@ -33,7 +36,7 @@ private:
     Ui::server *ui;
     QTcpServer *game_server;
     QTcpSocket *client_socket;
-    game *game_page;
+    game *game_server_page;
     bool ready = false;
     // Functions :
     QByteArray card_to_qbytearray(const card&);

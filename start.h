@@ -2,8 +2,10 @@
 #define START_H
 
 #include <QMainWindow>
+
 #include "server.h"
 #include "client.h"
+#include "start.h"
 
 namespace Ui {
 class start;
@@ -16,6 +18,7 @@ class start : public QMainWindow
 public:
     explicit start(QWidget *parent = nullptr);
     ~start();
+
 
 private slots:
     void on_btn_host_clicked();
