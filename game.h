@@ -29,7 +29,8 @@ public:
 private slots:
     void slo_forecast(int);
     void slo_selected_card(customized_button*);
-    void slo_arrange_card();
+    void slo_p1_arrange_card();
+    void slo_p2_arrange_card();
     void slo_active_click();
 
 signals:

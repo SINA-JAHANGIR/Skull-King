@@ -5,17 +5,22 @@
 #include <QVector>
 #include <QString>
 
+typedef QVector<customized_button*>::iterator iter;
 
 class player
 {
 private:
     QString username;
+    customized_button* selected_card;
 public:
     QVector<customized_button*> cards;
     player();
     // Functions :
     void set_username(QString);
     QString get_username();
+    void set_selected_card(customized_button*);
+    customized_button* get_selected_card();
+    iter find_card(customized_button*);
 };
 
 #endif // PLAYER_H

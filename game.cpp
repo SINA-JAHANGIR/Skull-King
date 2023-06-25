@@ -135,14 +135,18 @@ void game::slo_selected_card(customized_button* input)
 {
     inactive_click();
     input->get_btn_card().set_selected(true);
+    player1.set_selected_card(input);
+    iter it = player1.find_card(input);
+    player1.cards.erase(it);
     clear_move_animations();
     QPropertyAnimation *animation = new QPropertyAnimation(input,"geometry");
     animation->setDuration(500);
     QRect s = input->geometry();
     animation->setStartValue(s);
-    animation->setEndValue(QRect(width()/2-w/2, (height()/2-h/2)-30, w, h));
+    animation->setEndValue(QRect(width()/2-w/2, (height()/2-h/2), w, h));
     all_move_animation.append(animation);
     animation->start();
+    connect(animation,SIGNAL(finished()),this,SLOT(slo_p1_arrange_card()));
 }
 
 
@@ -255,48 +259,73 @@ void game::dealer_animation()
 {
     clear_move_animations();
     int size = player1.cards.size();
-    for(int i = 0 ; i < size ; i++){
+    for(int i = 0 ; i < size ; i++)
+    {
         QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
-        QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
         player1_animation->setDuration(1000+(i+1)*100);
         player1_animation->setStartValue(QRect(width()/2-w/2, height()/2-h/2, w, h));
         player1_animation->setEndValue(QRect((width()/2-w/2), height()-h-90, w, h));
         all_move_animation.append(player1_animation);
+        player1_animation->start();
+        if ( i == size - 1)
+        {
+            connect(player1_animation,SIGNAL(finished()),this,SLOT(slo_p1_arrange_card()));
+        }
+    }
+    for(int i = 0 ; i < size ; i++)
+        {
+        QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
         player2_animation->setDuration(1000+(i+1)*100);
         player2_animation->setStartValue(QRect(width()/2-w/2, height()/2-h/2, w, h));
         player2_animation->setEndValue(QRect((width()/2-w/2), 60, w, h));
         all_move_animation.append(player2_animation);
-        player1_animation->start();
         player2_animation->start();
         if ( i == size - 1)
-            connect(player1_animation,SIGNAL(finished()),this,SLOT(slo_arrange_card()));
+        {
+            connect(player2_animation,SIGNAL(finished()),this,SLOT(slo_p2_arrange_card()));
+        }
     }
 }
 
-void game::slo_arrange_card()
+void game::slo_p1_arrange_card()
 {
     clear_move_animations();
     int size = player1.cards.size();
     for (int i = 0 ; i < size ; i++)
     {
+        QRect temp = player1.cards[i]->geometry();
         QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
-        QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
-
         player1_animation->setDuration(1000);
         int x = (width()/2)-((size+1)*(w/4))+(i*w/2);
-        player1_animation->setStartValue(QRect((width()/2-w/2),height()-h-90, w, h));
+        player1_animation->setStartValue(temp);
         player1_animation->setEndValue(QRect(x,height()-h-90,w,h));
         all_move_animation.append(player1_animation);
+        player1_animation->start();
+        if (i == size - 1)
+            connect(player1_animation,SIGNAL(finished()),this,SLOT(slo_active_click()));
+    }
+}
+
+void game::slo_p2_arrange_card()
+{
+    clear_move_animations();
+    int size = player2.cards.size();
+    for (int i = 0 ; i < size ; i++)
+    {
+        QRect temp = player2.cards[i]->geometry();
+        QPropertyAnimation *player2_animation = new QPropertyAnimation(player2.cards[i],"geometry");
         player2_animation->setDuration(1000);
-        player2_animation->setStartValue(QRect((width()/2-w/2), 60, w, h));
+        int x = (width()/2)-((size+1)*(w/4))+(i*w/2);
+        player2_animation->setStartValue(temp);
         player2_animation->setEndValue(QRect(x,60,w,h));
         all_move_animation.append(player2_animation);
-        player1_animation->start();
         player2_animation->start();
         if (i == size - 1)
             connect(player2_animation,SIGNAL(finished()),this,SLOT(slo_active_click()));
     }
 }
+
+
 
 void game::slo_active_click()
 {
