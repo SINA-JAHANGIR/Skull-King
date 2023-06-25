@@ -16,8 +16,6 @@ public:
     // Functions :
     void set_username(QString);
     QString get_username();
-    void set_cards(QVector<customized_button*>);
-    QVector<customized_button*> get_cards();
 };
 
 #endif // PLAYER_H

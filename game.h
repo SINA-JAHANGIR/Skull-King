@@ -23,14 +23,14 @@ public:
     ~game();
     // Functions :
     void start();
-    void round(int);
     void make_card(int);
     void dealer_animation();
 
 private slots:
     void slo_forecast(int);
-    void slo_selected_card(card);
+    void slo_selected_card(customized_button*);
     void slo_arrange_card();
+    void slo_active_click();
 
 signals:
     void sig_send_card();
@@ -46,8 +46,11 @@ private:
     QVector<QPropertyAnimation *> all_move_animation;
     // Functions :
     void set_all_cards();
+    void sort_btn_cards(QVector<customized_button*>&);
+    void clear_move_animations();
     void forecast(int);
     void change_StyleSheet(customized_button*);
+    void inactive_click();
     friend class client;
     friend class server;
 };

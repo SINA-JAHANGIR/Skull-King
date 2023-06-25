@@ -2,7 +2,7 @@
 #include "ui_game.h"
 #include <QScreen>
 #include <QLabel>
-#include <QPixmap>
+using namespace std;
 
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 
@@ -35,68 +35,127 @@ void game::set_all_cards()
     {
         all_cards[i].set_value(i+1);
         all_cards[i].set_type(parrot);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int i = 11 ; i < 22 ; i++)
     {
         all_cards[i].set_value(i-10);
         all_cards[i].set_type(gold);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int i = 22 ; i < 33 ; i++)
     {
         all_cards[i].set_value(i-21);
-        all_cards[i].set_type(map);
+        all_cards[i].set_type(card_type::map);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int i = 33 ; i < 44 ; i++)
     {
         all_cards[i].set_value(i-32);
         all_cards[i].set_type(flag);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int i = 44 ; i < 48 ; i++)
     {
         all_cards[i].set_value(i-43);
         all_cards[i].set_type(pirate);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int i = 48 ; i < 52 ; i++)
     {
         all_cards[i].set_value(i-47);
-        all_cards[i].set_type(king);
+        all_cards[i].set_type(queen);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int i = 52 ; i < 56 ; i++)
     {
         all_cards[i].set_value(i-51);
-        all_cards[i].set_type(queen);
+        all_cards[i].set_type(king);
+        all_cards[i].set_number(i);
         customized_button *new_button = new customized_button(all_cards[i]);
+        new_button->setEnabled(false);
         new_button->change_obj_name();
         all_cards_btn[i] = new_button;
-        connect(new_button,SIGNAL(sig_card_clicked(int)),this,SLOT(slo_selected_card(card)));
+        connect(new_button,SIGNAL(sig_card_clicked(customized_button*)),this,SLOT(slo_selected_card(customized_button*)));
     }
     for (int j = 0 ; j < 56 ; j++)
         all_cards_btn[j]->setFixedSize(w,h);
 }
+
+
+void game::sort_btn_cards(QVector<customized_button*>& cards)
+{
+    int s  = cards.size();
+    for (int i = 0 ; i < s - 1 ; i++)
+    {
+        for (int j = i + 1 ; j < s ; j++)
+        {
+            if (cards[i]->get_btn_card().get_number() > cards[j]->get_btn_card().get_number())
+            {
+                customized_button* temp = cards[i];
+                cards[i] = cards[j];
+                cards[j] = temp;
+            }
+        }
+    }
+}
+
+
+void game::slo_selected_card(customized_button* input)
+{
+    inactive_click();
+    input->get_btn_card().set_selected(true);
+    clear_move_animations();
+    QPropertyAnimation *animation = new QPropertyAnimation(input,"geometry");
+    animation->setDuration(500);
+    QRect s = input->geometry();
+    animation->setStartValue(s);
+    animation->setEndValue(QRect(width()/2-w/2, (height()/2-h/2)-30, w, h));
+    all_move_animation.append(animation);
+    animation->start();
+}
+
+
+void game::clear_move_animations()
+{
+    int size = all_move_animation.size();
+    for (int i = 0 ; i < size ; i++)
+        delete all_move_animation[i];
+    all_move_animation.clear();
+}
+
+
+
 
 void game::forecast(int input)
 {
@@ -121,18 +180,6 @@ void game::forecast(int input)
 void game::slo_forecast(int input)
 {
     // get number of hands :
-}
-
-void game::slo_selected_card(card input)
-{
-    // get selected card :
-}
-
-
-void game::round(int n)
-{
-    make_card(n);
-    dealer_animation();
 }
 
 void game::make_card(int n)
@@ -170,23 +217,30 @@ void game::make_card(int n)
                 }
             }
         }
+
         for(int i = 0 ; i < 2*n ; i++)
-        {
             player1.cards.append(all_cards_btn[index[i]]);
-            change_StyleSheet(all_cards_btn[index[i]]);
-            all_cards_btn[index[i]]->setParent(ui->centralwidget);
-            all_cards_btn[index[i]]->show();
-        }
+
         for(int i = 2*n ; i < 4*n ; i++)
-        {
             player2.cards.append(all_cards_btn[index[i]]);
-            all_cards_btn[index[i]]->setStyleSheet(BACK);
-            all_cards_btn[index[i]]->setParent(ui->centralwidget);
-            all_cards_btn[index[i]]->show();
-        }
+
         delete[] index;
-    }      
-    emit sig_send_card();
+    }
+    sort_btn_cards(player1.cards);
+    sort_btn_cards(player2.cards);
+    for (int i = 0 ; i < player1.cards.size() ; i++)
+    {
+        change_StyleSheet(player1.cards[i]);
+        player1.cards[i]->setParent(ui->centralwidget);
+        player1.cards[i]->show();
+    }
+    for (int i = 0 ; i < player2.cards.size() ; i++)
+    {
+        player2.cards[i]->setStyleSheet(BACK);
+        player2.cards[i]->setParent(ui->centralwidget);
+        player2.cards[i]->show();
+    }
+    // emit sig_send_card();
 }
 
 void game::change_StyleSheet(customized_button* input)
@@ -199,6 +253,7 @@ void game::change_StyleSheet(customized_button* input)
 
 void game::dealer_animation()
 {
+    clear_move_animations();
     int size = player1.cards.size();
     for(int i = 0 ; i < size ; i++){
         QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
@@ -220,12 +275,8 @@ void game::dealer_animation()
 
 void game::slo_arrange_card()
 {
-    int size = all_move_animation.size();
-    for (int i = 0 ; i < size ; i++)
-        delete all_move_animation[i];
-    all_move_animation.clear();
-
-    size = player1.cards.size();
+    clear_move_animations();
+    int size = player1.cards.size();
     for (int i = 0 ; i < size ; i++)
     {
         QPropertyAnimation *player1_animation = new QPropertyAnimation(player1.cards[i],"geometry");
@@ -242,12 +293,33 @@ void game::slo_arrange_card()
         all_move_animation.append(player2_animation);
         player1_animation->start();
         player2_animation->start();
+        if (i == size - 1)
+            connect(player2_animation,SIGNAL(finished()),this,SLOT(slo_active_click()));
+    }
+}
+
+void game::slo_active_click()
+{
+    int s = player1.cards.size();
+    for (int i = 0 ; i < s ; i++)
+    {
+        player1.cards[i]->setEnabled(true);
+    }
+}
+
+void game::inactive_click()
+{
+    int s = player1.cards.size();
+    for (int i = 0 ; i < s ; i++)
+    {
+        player1.cards[i]->setEnabled(false);
     }
 }
 
 
 void game::start()
 {
-    round(1);
+    make_card(7);
+    dealer_animation();
 }
 

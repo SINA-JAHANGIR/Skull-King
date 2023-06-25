@@ -19,18 +19,20 @@ void customized_button::slo_number_clicked()
 
 void customized_button::slo_card_clicked()
 {
-    emit sig_card_clicked(button_card);
+    emit sig_card_clicked(this);
 }
 
 customized_button::customized_button(int input)
 {
     button_number = input;
+    connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_number_clicked()));
 }
 
 customized_button::customized_button(card input)
 {
     button_card = input;
     button_number = -1;
+    connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_card_clicked()));
 }
 
 void customized_button::set_btn_number(int input)

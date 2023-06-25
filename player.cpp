@@ -14,15 +14,3 @@ QString player::get_username()
 {
     return username;
 }
-
-/*
-void player::set_cards(QVector<customized_button*> input)
-{
-    cards = input;
-}
-
-QVector<customized_button*> player::get_cards()
-{
-    return cards;
-}
-*/

@@ -22,7 +22,7 @@ public:
     void change_obj_name();
 signals:
     void sig_number_clicked(int);
-    void sig_card_clicked(card);
+    void sig_card_clicked(customized_button*);
 private slots:
     void slo_number_clicked();
     void slo_card_clicked();
