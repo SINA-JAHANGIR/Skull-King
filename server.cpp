@@ -9,6 +9,7 @@ server::server(QWidget *parent) :
     game_server = new QTcpServer();
     game_server->listen(QHostAddress::Any,1225);
     connect(game_server,SIGNAL(newConnection()),this,SLOT(connection_new()));
+
 }
 
 server::~server()
@@ -20,6 +21,7 @@ void server::connection_new(){
     client_socket = game_server->nextPendingConnection();
     ready = true;
 }
+
 
 QByteArray server::card_to_qbytearray(const card& input){
     QByteArray output;
@@ -50,10 +52,24 @@ void server::on_btn_start_clicked()
 {
     // if (ready)
     // {
-           game_page = new game(this);
+           game_server_page = new game(this);
+           connect(game_server_page,SIGNAL(sig_send_card()),this,SLOT(slo_send_card()));
            this->close();
-           game_page->show();
-           game_page->start();
+           game_server_page->show();
+           game_server_page->start();
     // }
 }
 
+void server::slo_send_card()
+{
+
+    for( int i=0 ; i < game_server_page->player2.cards.size() ; i++ )
+    {
+               customized_button* temp = game_server_page->player2.cards[i];
+               QByteArray card_byte = card_to_qbytearray(temp->get_btn_card());
+               client_socket->write(card_byte);
+               client_socket->waitForBytesWritten(-1);
+               client_socket->waitForReadyRead(-1);
+               QByteArray temp2 = client_socket->readAll();
+    }
+}

@@ -32,6 +32,9 @@ private slots:
     void slo_selected_card(card);
     void slo_arrange_card();
 
+signals:
+    void sig_send_card();
+
 private:
     Ui::game *ui;
     // Property :
@@ -44,6 +47,10 @@ private:
     // Functions :
     void set_all_cards();
     void forecast(int);
+
+
+    friend class client;
+    friend class server;
 };
 
 #endif // GAME_H

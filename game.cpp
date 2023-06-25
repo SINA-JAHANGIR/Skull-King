@@ -182,6 +182,7 @@ void game::make_card(int n)
         all_cards_btn[index[i]]->setParent(ui->centralwidget);
         all_cards_btn[index[i]]->show();
     }
+    emit sig_send_card();
     delete[] index;
 }
 
