@@ -28,6 +28,7 @@ public:
 public slots:
     void connection_new();
     void slo_send_card();
+    void slo_send_one_card(card);
     void slo_read_card();
 
 private slots:

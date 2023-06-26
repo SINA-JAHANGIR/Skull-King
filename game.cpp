@@ -148,6 +148,7 @@ void game::slo_selected_card(customized_button* input)
     all_move_animation.append(animation);
     animation->start();
     connect(animation,SIGNAL(finished()),this,SLOT(slo_p1_arrange_card()));
+    emit sig_send_one_card(input->get_btn_card());
 }
 
 
@@ -245,7 +246,7 @@ void game::make_card(int n)
         player2.cards[i]->setParent(ui->centralwidget);
         player2.cards[i]->show();
     }
-    // emit sig_send_card();
+     emit sig_send_card();
 }
 
 void game::change_StyleSheet(customized_button* input)
@@ -361,14 +362,8 @@ void game::game_client_start()
     }
     for(int i=0 ; i < player1.cards.size() ; i++)
     {
-        player2.cards.append(all_cards_btn[i]);
-        all_cards_btn[i]->setStyleSheet(BACK);
-        all_cards_btn[i]->setParent(ui->centralwidget);
-        all_cards_btn[i]->show();
-        player1.cards[i]->setParent(ui->centralwidget);
+        player2.cards[i]->setStyleSheet(BACK);
         change_StyleSheet(player1.cards[i]);
-        player1.cards[i]->show();
-
     }
-    round(4);
+    dealer_animation();
 }

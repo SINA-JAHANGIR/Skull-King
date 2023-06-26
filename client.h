@@ -26,7 +26,7 @@ public:
 public slots:
     void connected_to_server();
     void slo_read_card();
-    void slo_send_card(card);
+    void slo_send_one_card(card);
 
 private slots:
     void on_btn_start_clicked();
