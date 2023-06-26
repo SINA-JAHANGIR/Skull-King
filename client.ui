@@ -15,6 +15,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btn_start">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>210</x>

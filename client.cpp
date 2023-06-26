@@ -1,5 +1,6 @@
 #include "client.h"
 #include "ui_client.h"
+#include "ui_game.h"
 
 client::client(QWidget *parent) :
     QMainWindow(parent),
@@ -9,19 +10,23 @@ client::client(QWidget *parent) :
     socket = new QTcpSocket;
     socket->connectToHost("127.0.0.1",1225);
     connect(socket,SIGNAL(connected()),this,SLOT(connected_to_server()));
-    connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
+//    connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
+
+    game_client_page = new game(this);
+    connect(game_client_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_card(card)));
+    thread = std::thread(&client::slo_read_card,this);
 }
 
 client::~client()
 {
+    thread.join();
     delete ui;
 }
 
 void client::connected_to_server()
 {
-    game_client_page = new game(this);
-    this->close();
-    game_client_page->show();
+    ui->btn_start->setEnabled(true);
+
 }
 
 
@@ -53,24 +58,45 @@ void client::on_btn_start_clicked()
 {
 //    if(ready)
 //    {
-//        game_client_page = new game(this);
-//        this->close();
-//        game_client_page->show();
-//    }
+
+        this->hide();
+        game_client_page->show();
+        game_client_page->game_client_start();
+        //    }
 }
 
 void client::slo_read_card()
 {
-
-    QByteArray card_byte = socket->readAll();
-    card temp = qbytearray_to_card(card_byte);
-    if(temp.get_selected()==true)
+    while(true)
     {
-        //
+        if(socket->waitForReadyRead(-1))
+        {
+            QByteArray card_byte = socket->readAll();
+            card temp = qbytearray_to_card(card_byte);
+            if(card_byte=="end")
+            {
+                game_client_page->fl=false;
+                return;
+            }
+            if(temp.get_selected()==true)
+            {
+                //
+            }
+            else{
+                customized_button *new_button = new customized_button(temp);
+//                new_button->setParent(game_client_page->ui->centralwidget);
+                game_client_page->player1.cards.append(new_button);
+            }
+            QString t = "1";
+            socket->write(t.toStdString().c_str());
+            socket->waitForBytesWritten(-1);
+        }
     }
-    else{
-        customized_button *new_button = new customized_button(temp);
-        game_client_page->player1.cards.append(new_button);
-    }
-    socket->write("1");
+}
+
+void client::slo_send_card(card input)
+{
+    QByteArray card_byte = card_to_qbytearray(input);
+    socket->write(card_byte);
+    socket->waitForBytesWritten(-1);
 }

@@ -30,6 +30,7 @@ game::~game()
 
 
 void game::set_all_cards()
+
 {
     for (int i = 0 ; i < 11 ; i++)
     {
@@ -346,9 +347,28 @@ void game::inactive_click()
 }
 
 
-void game::start()
+void game::game_server_start()
 {
     make_card(7);
     dealer_animation();
 }
 
+void game::game_client_start()
+{
+    while(fl)
+    {
+
+    }
+    for(int i=0 ; i < player1.cards.size() ; i++)
+    {
+        player2.cards.append(all_cards_btn[i]);
+        all_cards_btn[i]->setStyleSheet(BACK);
+        all_cards_btn[i]->setParent(ui->centralwidget);
+        all_cards_btn[i]->show();
+        player1.cards[i]->setParent(ui->centralwidget);
+        change_StyleSheet(player1.cards[i]);
+        player1.cards[i]->show();
+
+    }
+    round(4);
+}

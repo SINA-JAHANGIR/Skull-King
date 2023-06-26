@@ -19,6 +19,7 @@ server::~server()
 
 void server::connection_new(){
     client_socket = game_server->nextPendingConnection();
+    connect(client_socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
     ready = true;
 }
 
@@ -56,7 +57,7 @@ void server::on_btn_start_clicked()
            connect(game_server_page,SIGNAL(sig_send_card()),this,SLOT(slo_send_card()));
            this->close();
            game_server_page->show();
-           game_server_page->start();
+           game_server_page->game_server_start();
     // }
 }
 
@@ -71,5 +72,18 @@ void server::slo_send_card()
                client_socket->waitForBytesWritten(-1);
                client_socket->waitForReadyRead(-1);
                QByteArray temp2 = client_socket->readAll();
+               if(temp2.toStdString()=="a"||temp2.size()==1)
+               {
+                   int mm=13;
+               }
     }
+    QString t="end";
+    client_socket->write(t.toStdString().c_str());
+}
+
+void server::slo_read_card()
+{
+    QByteArray card_byte = client_socket->readAll();
+    card temp = qbytearray_to_card(card_byte);
+    //...
 }

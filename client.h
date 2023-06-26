@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include <QByteArray>
 #include <QDataStream>
+#include <Thread>
 
 #include "card.h"
 #include "game.h"
@@ -25,6 +26,7 @@ public:
 public slots:
     void connected_to_server();
     void slo_read_card();
+    void slo_send_card(card);
 
 private slots:
     void on_btn_start_clicked();
@@ -36,6 +38,8 @@ private:
     Ui::client *ui;
     QTcpSocket *socket;
     game *game_client_page;
+    std::thread thread;
+
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);
