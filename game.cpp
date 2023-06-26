@@ -30,6 +30,7 @@ game::~game()
 
 
 void game::set_all_cards()
+
 {
     for (int i = 0 ; i < 11 ; i++)
     {
@@ -131,7 +132,7 @@ void game::slo_selected_card(card input)
 
 void game::round(int n)
 {
-    make_card(n);
+
     dealer_animation();
 }
 
@@ -185,7 +186,7 @@ void game::make_card(int n)
             all_cards_btn[index[i]]->show();
         }
         delete[] index;
-    }      
+    }
     emit sig_send_card();
 }
 
@@ -246,8 +247,28 @@ void game::slo_arrange_card()
 }
 
 
-void game::start()
+void game::game_server_start()
 {
-    round(1);
+    make_card(4);
+    round(4);
 }
 
+void game::game_client_start()
+{
+    while(fl)
+    {
+
+    }
+    for(int i=0 ; i < player1.cards.size() ; i++)
+    {
+        player2.cards.append(all_cards_btn[i]);
+        all_cards_btn[i]->setStyleSheet(BACK);
+        all_cards_btn[i]->setParent(ui->centralwidget);
+        all_cards_btn[i]->show();
+        player1.cards[i]->setParent(ui->centralwidget);
+        change_StyleSheet(player1.cards[i]);
+        player1.cards[i]->show();
+
+    }
+    round(4);
+}

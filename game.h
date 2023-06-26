@@ -22,7 +22,8 @@ public:
     explicit game(QWidget *parent = nullptr);
     ~game();
     // Functions :
-    void start();
+    void game_server_start();
+    void game_client_start();
     void round(int);
     void make_card(int);
     void dealer_animation();
@@ -34,6 +35,7 @@ private slots:
 
 signals:
     void sig_send_card();
+    void sig_send_one_card(card);
 
 private:
     Ui::game *ui;
@@ -44,6 +46,7 @@ private:
     player player2;
     QVector<customized_button *> all_forecast_btn;
     QVector<QPropertyAnimation *> all_move_animation;
+    bool fl = true;
     // Functions :
     void set_all_cards();
     void forecast(int);
