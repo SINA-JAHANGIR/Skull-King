@@ -186,3 +186,4 @@ QString card::get_type_string()
     break;
     }
 }
+

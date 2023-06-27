@@ -10,6 +10,8 @@
 #include "card.h"
 #include "player.h"
 
+enum turn_status {p1,p2};
+
 namespace Ui {
 class game;
 }
@@ -24,15 +26,16 @@ public:
     // Functions :
     void game_server_start();
     void game_client_start();
-    void make_card(int);
-    void dealer_animation();
 
 private slots:
-    void slo_forecast(int);
-    void slo_selected_card(customized_button*);
+    void slo_arrange_card();
     void slo_p1_arrange_card();
     void slo_p2_arrange_card();
-    void slo_active_click();
+    void slo_forecast();
+    void slo_active_num_click();
+    void slo_selected_num_btn(int);
+    void slo_active_card_click();
+    void slo_selected_card_btn(customized_button*);
 
 signals:
     void sig_send_card();
@@ -45,16 +48,21 @@ private:
     customized_button * all_cards_btn[56];
     player player1;
     player player2;
-    QVector<customized_button *> all_forecast_btn;
     QVector<QPropertyAnimation *> all_move_animation;
+    QVector<customized_button *> all_forecast_btn;
+    customized_button* forecast_p1_btn;
+    turn_status turn = p1;
     bool fl = true;
     // Functions :
     void set_all_cards();
+    void change_StyleSheet(customized_button*);
+    void make_card(int);
+    void dealer_animation();
     void sort_btn_cards(QVector<customized_button*>&);
     void clear_move_animations();
-    void forecast(int);
-    void change_StyleSheet(customized_button*);
-    void inactive_click();
+    void clear_all_forecast_btn();
+    void inactive_num_click();
+    void inactive_card_click();
     friend class client;
     friend class server;
 };

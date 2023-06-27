@@ -57,7 +57,7 @@ card customized_button::get_btn_card()
 
 void customized_button::change_obj_name()
 {
-    if (button_number>0)
+    if (button_number>=0)
         this->setObjectName(QString::number(button_number));
     else
     {
