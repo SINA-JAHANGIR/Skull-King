@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <QByteArray>
 #include <QDataStream>
+#include <thread>
+#include <QSignalSpy>
 
 
 #include "game.h"
@@ -34,12 +36,17 @@ public slots:
 private slots:
     void on_btn_start_clicked();
 
+signals:
+    void sig_continue();
+
 private:
     Ui::server *ui;
     QTcpServer *game_server;
     QTcpSocket *client_socket;
     game *game_server_page;
     bool ready = false;
+    std::thread thread;
+    QSignalSpy* spy;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

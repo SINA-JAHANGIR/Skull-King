@@ -351,6 +351,10 @@ void game::inactive_click()
 void game::game_server_start()
 {
     make_card(7);
+    while(fl)
+    {
+
+    }
     dealer_animation();
 }
 

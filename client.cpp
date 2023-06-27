@@ -114,7 +114,7 @@ void client::slo_read_card()
                 card temp = qbytearray_to_card(card_byte);
                 //...
             }
-            t = "1";
+            t = "ok";
             socket->write(t.toStdString().c_str());
             socket->waitForBytesWritten(-1);
         }
