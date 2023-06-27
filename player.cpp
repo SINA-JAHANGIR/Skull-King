@@ -15,6 +15,17 @@ QString player::get_username()
     return username;
 }
 
+
+void player::set_forecast_number(int input)
+{
+    forecast_number = input;
+}
+
+int player::get_forecast_number()
+{
+    return forecast_number;
+}
+
 void player::set_selected_card(customized_button * input)
 {
     selected_card = input;

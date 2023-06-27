@@ -39,17 +39,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>470</y>
-      <width>681</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="hl_forecast_btn"/>
-   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

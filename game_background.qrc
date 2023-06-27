@@ -90,5 +90,15 @@
         <file>photos/queen 3.png</file>
         <file>photos/queen 4.png</file>
         <file>photos/queen.png</file>
+        <file>photos/10.png</file>
+        <file>photos/11.png</file>
+        <file>photos/12.png</file>
+        <file>photos/13.png</file>
+        <file>photos/14.png</file>
+        <file>photos/click 10.png</file>
+        <file>photos/click 11.png</file>
+        <file>photos/click 12.png</file>
+        <file>photos/click 13.png</file>
+        <file>photos/click 14.png</file>
     </qresource>
 </RCC>
