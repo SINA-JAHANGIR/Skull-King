@@ -10,7 +10,7 @@
 #include "card.h"
 #include "player.h"
 
-enum turn_status {p1,p2};
+enum status {p1,p2};
 
 namespace Ui {
 class game;
@@ -35,7 +35,9 @@ private slots:
     void slo_active_num_click();
     void slo_selected_num_btn(int);
     void slo_active_card_click();
-    void slo_selected_card_btn(customized_button*);
+    void slo_selected_p1_card_btn(customized_button*);
+    void slo_selected_p2_card_btn();
+    void slo_compare_two_cards();
 
 signals:
     void sig_send_card();
@@ -51,7 +53,10 @@ private:
     QVector<QPropertyAnimation *> all_move_animation;
     QVector<customized_button *> all_forecast_btn;
     customized_button* forecast_p1_btn;
-    turn_status turn = p1;
+    customized_button* forecast_p2_btn;
+    status turn = p1;
+    status hand_winner;
+    bool first_flag = true;
     bool fl = true;
     // Functions :
     void set_all_cards();
@@ -63,6 +68,7 @@ private:
     void clear_all_forecast_btn();
     void inactive_num_click();
     void inactive_card_click();
+    void hand_win();
     friend class client;
     friend class server;
 };
