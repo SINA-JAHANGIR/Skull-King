@@ -181,7 +181,6 @@ void game::make_card(int n)
     player2.set_selected_card_btn(player2.cards[0]);
     player2.set_forecast_number(0);
     /*//////////////////////////////////////////////////////////////////////*/
-    dealer_animation();
 }
 
 
@@ -525,26 +524,25 @@ void game::hand_win()
 void game::game_server_start()
 {
     make_card(7);
+    while(wait)
+    {
+
+    }
+    dealer_animation();
 }
 
 void game::game_client_start()
 {
-    while(fl)
+    while(wait)
     {
 
     }
     for(int i=0 ; i < player1.cards.size() ; i++)
     {
-        player2.cards.append(all_cards_btn[i]);
-        all_cards_btn[i]->setStyleSheet(BACK);
-        all_cards_btn[i]->setParent(ui->centralwidget);
-        all_cards_btn[i]->show();
-        player1.cards[i]->setParent(ui->centralwidget);
+        player2.cards[i]->setStyleSheet(BACK);
         change_StyleSheet(player1.cards[i]);
-        player1.cards[i]->show();
-
     }
-    round(4);
+    dealer_animation();
 }
 
 
@@ -587,4 +585,8 @@ void game::game_client_start()
 
 
 
+void game::on_btn_change_clicked()
+{
+    emit sig_change_card();
+}
 

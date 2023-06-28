@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QVBoxLayout>
 #include <QPropertyAnimation>
+#include <QMessageBox>
 
 #include "customized_button.h"
 #include "card.h"
@@ -38,10 +39,12 @@ private slots:
     void slo_selected_p1_card_btn(customized_button*);
     void slo_selected_p2_card_btn();
     void slo_compare_two_cards();
+    void on_btn_change_clicked();
 
 signals:
     void sig_send_card();
     void sig_send_one_card(card);
+    void sig_change_card();
 
 private:
     Ui::game *ui;
@@ -57,7 +60,7 @@ private:
     status turn = p1;
     status hand_winner;
     bool first_flag = true;
-    bool fl = true;
+    bool wait = true;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);
@@ -69,6 +72,7 @@ private:
     void inactive_num_click();
     void inactive_card_click();
     void hand_win();
+    void change_card();
     friend class client;
     friend class server;
 };

@@ -70,6 +70,9 @@ target_link_libraries(Skull-King PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
 target_link_libraries(Skull-King PRIVATE Qt6::Network)
 
+find_package(Qt6 REQUIRED COMPONENTS Test)
+target_link_libraries(Skull-King PRIVATE Qt6::Test)
+
 set_target_properties(Skull-King PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
