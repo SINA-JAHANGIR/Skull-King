@@ -32,12 +32,15 @@ public slots:
     void slo_send_card();
     void slo_send_one_card(card);
     void slo_read_card();
+    void slo_change_card();
+    void slo_change_request();
 
 private slots:
     void on_btn_start_clicked();
 
 signals:
     void sig_continue();
+    void sig_change_request();
 
 private:
     Ui::server *ui;
@@ -50,6 +53,7 @@ private:
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);
+    void change_card();
 };
 
 #endif // SERVER_H

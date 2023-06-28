@@ -149,6 +149,7 @@ void game::slo_selected_card(customized_button* input)
     animation->start();
     connect(animation,SIGNAL(finished()),this,SLOT(slo_p1_arrange_card()));
     emit sig_send_one_card(input->get_btn_card());
+
 }
 
 
@@ -371,3 +372,9 @@ void game::game_client_start()
     }
     dealer_animation();
 }
+
+void game::on_btn_change_clicked()
+{
+    emit sig_change_card();
+}
+

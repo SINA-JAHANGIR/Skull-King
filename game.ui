@@ -50,6 +50,19 @@
     </property>
     <layout class="QHBoxLayout" name="hl_forecast_btn"/>
    </widget>
+   <widget class="QPushButton" name="btn_change">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>240</y>
+      <width>81</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>change</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

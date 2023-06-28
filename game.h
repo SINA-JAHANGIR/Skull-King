@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QVBoxLayout>
 #include <QPropertyAnimation>
+#include <QMessageBox>
 
 #include "customized_button.h"
 #include "card.h"
@@ -33,10 +34,12 @@ private slots:
     void slo_p1_arrange_card();
     void slo_p2_arrange_card();
     void slo_active_click();
+    void on_btn_change_clicked();
 
 signals:
     void sig_send_card();
     void sig_send_one_card(card);
+    void sig_change_card();
 
 private:
     Ui::game *ui;
@@ -55,6 +58,7 @@ private:
     void forecast(int);
     void change_StyleSheet(customized_button*);
     void inactive_click();
+    void change_card();
     friend class client;
     friend class server;
 };
