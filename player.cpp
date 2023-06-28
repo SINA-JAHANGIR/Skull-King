@@ -26,14 +26,14 @@ int player::get_forecast_number()
     return forecast_number;
 }
 
-void player::set_selected_card(customized_button * input)
+void player::set_selected_card_btn(customized_button * input)
 {
-    selected_card = input;
+    selected_card_btn = input;
 }
 
-customized_button* player::get_selected_card()
+customized_button* player::get_selected_card_btn()
 {
-    return selected_card;
+    return selected_card_btn;
 }
 
 iter player::find_card(customized_button* input)

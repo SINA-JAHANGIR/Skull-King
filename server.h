@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <QByteArray>
 #include <QDataStream>
+#include <thread>
+#include <QSignalSpy>
 
 
 #include "game.h"
@@ -28,10 +30,17 @@ public:
 public slots:
     void connection_new();
     void slo_send_card();
+    void slo_send_one_card(card);
     void slo_read_card();
+    void slo_change_card();
+    void slo_change_request();
 
 private slots:
     void on_btn_start_clicked();
+
+signals:
+    void sig_continue();
+    void sig_change_request();
 
 private:
     Ui::server *ui;
@@ -39,9 +48,12 @@ private:
     QTcpSocket *client_socket;
     game *game_server_page;
     bool ready = false;
+    std::thread thread;
+    QSignalSpy* spy;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);
+    void change_card();
 };
 
 #endif // SERVER_H

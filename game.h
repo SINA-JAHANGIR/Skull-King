@@ -5,12 +5,13 @@
 #include <QVector>
 #include <QVBoxLayout>
 #include <QPropertyAnimation>
+#include <QMessageBox>
 
 #include "customized_button.h"
 #include "card.h"
 #include "player.h"
 
-enum turn_status {p1,p2};
+enum status {p1,p2};
 
 namespace Ui {
 class game;
@@ -35,11 +36,15 @@ private slots:
     void slo_active_num_click();
     void slo_selected_num_btn(int);
     void slo_active_card_click();
-    void slo_selected_card_btn(customized_button*);
+    void slo_selected_p1_card_btn(customized_button*);
+    void slo_selected_p2_card_btn();
+    void slo_compare_two_cards();
+    void on_btn_change_clicked();
 
 signals:
     void sig_send_card();
     void sig_send_one_card(card);
+    void sig_change_card();
 
 private:
     Ui::game *ui;
@@ -51,8 +56,11 @@ private:
     QVector<QPropertyAnimation *> all_move_animation;
     QVector<customized_button *> all_forecast_btn;
     customized_button* forecast_p1_btn;
-    turn_status turn = p1;
-    bool fl = true;
+    customized_button* forecast_p2_btn;
+    status turn = p1;
+    status hand_winner;
+    bool first_flag = true;
+    bool wait = true;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);
@@ -63,6 +71,8 @@ private:
     void clear_all_forecast_btn();
     void inactive_num_click();
     void inactive_card_click();
+    void hand_win();
+    void change_card();
     friend class client;
     friend class server;
 };
