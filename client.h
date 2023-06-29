@@ -29,12 +29,14 @@ public slots:
     void slo_read_card();
     void slo_send_one_card(card);
     void slo_change_card();
+    void slo_send_forecast();
 
 private slots:
     void on_btn_start_clicked();
 
 signals:
     void sig_continue();
+    void sig_game_continue();
 
 
 private:

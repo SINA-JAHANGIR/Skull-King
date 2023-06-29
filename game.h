@@ -6,6 +6,8 @@
 #include <QVBoxLayout>
 #include <QPropertyAnimation>
 #include <QMessageBox>
+#include <QSignalSpy>
+#include <QEventLoop>
 
 #include "customized_button.h"
 #include "card.h"
@@ -46,6 +48,7 @@ signals:
     void sig_send_card();
     void sig_send_one_card(card);
     void sig_change_card();
+    void sig_send_forecast();
 
 private:
     Ui::game *ui;
@@ -65,6 +68,7 @@ private:
     int r = 0;
     bool first_flag = true;
     bool wait = true;
+    QEventLoop loop;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);

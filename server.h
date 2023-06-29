@@ -34,6 +34,7 @@ public slots:
     void slo_read_card();
     void slo_change_card();
     void slo_change_request();
+    void slo_send_forecast();
 
 private slots:
     void on_btn_start_clicked();
@@ -41,6 +42,7 @@ private slots:
 signals:
     void sig_continue();
     void sig_change_request();
+    void sig_game_continue();
 
 private:
     Ui::server *ui;
