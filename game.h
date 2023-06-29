@@ -39,8 +39,9 @@ private slots:
     void slo_selected_p1_card_btn(customized_button*);
     void slo_selected_p2_card_btn();
     void slo_compare_two_cards();
+    void slo_hide_forecast_btn();
+    void slo_rate_round();
     void on_btn_change_clicked();
-
 signals:
     void sig_send_card();
     void sig_send_one_card(card);
@@ -55,15 +56,22 @@ private:
     player player2;
     QVector<QPropertyAnimation *> all_move_animation;
     QVector<customized_button *> all_forecast_btn;
-    customized_button* forecast_p1_btn;
-    customized_button* forecast_p2_btn;
+    customized_button* forecast_p1_btn = nullptr;
+    customized_button* forecast_p2_btn = nullptr;
     status turn = p1;
     status hand_winner;
+    QLabel* lbl_score_p1;
+    QLabel* lbl_score_p2;
+    int r = 0;
     bool first_flag = true;
     bool wait = true;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);
+    void rasie_p2_cards();
+    void rasie_p1_cards();
+    void rasie_p1_win_cards();
+    void rasie_p2_win_cards();
     void make_card(int);
     void dealer_animation();
     void sort_btn_cards(QVector<customized_button*>&);

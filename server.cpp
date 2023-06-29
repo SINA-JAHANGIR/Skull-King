@@ -26,7 +26,7 @@ server::~server()
 
 void server::connection_new(){
     client_socket = game_server->nextPendingConnection();
-    this->ui->btn_start->setEnabled(true);
+    //this->ui->btn_start->setEnabled(true);
     thread = std::thread(&server::slo_read_card,this);
     spy = new QSignalSpy(this,SIGNAL(sig_continue()));
     ready = true;
@@ -71,7 +71,7 @@ void server::change_card()
     game_server_page->player2.cards.erase(it_p2);
     game_server_page->player1.cards.append(bp2);
     game_server_page->player2.cards.append(bp1);
-    game_server_page->change_StyleSheet(bp2);
+    bp2->change_card_StyleSheet();
     bp1->setStyleSheet(BACK);
     bp1->setEnabled(false);
 

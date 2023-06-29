@@ -42,10 +42,10 @@
    <widget class="QPushButton" name="btn_change">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>240</y>
-      <width>81</width>
-      <height>91</height>
+      <x>0</x>
+      <y>0</y>
+      <width>71</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">

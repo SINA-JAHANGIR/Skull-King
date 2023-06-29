@@ -36,6 +36,39 @@ customized_button* player::get_selected_card_btn()
     return selected_card_btn;
 }
 
+void player::clear_cards()
+{
+    for (iter i = cards.begin() ; i < cards.end() ; i++)
+    {
+        cards.erase(i);
+    }
+}
+
+void player::clear_win_cards()
+{
+    for (iter i = win_cards.begin() ; i < win_cards.end() ; i++)
+    {
+        win_cards.erase(i);
+    }
+}
+
+void player::hide_cards()
+{
+    for (int i = 0 ; i < cards.size() ; i++)
+    {
+        cards[i]->hide();
+    }
+}
+
+void player::hide_win_cards()
+{
+    for (int i = 0 ; i < win_cards.size() ; i++)
+    {
+        win_cards[i]->hide();
+    }
+}
+
+
 iter player::find_card(customized_button* input)
 {
     for (iter i = cards.begin() ; i != cards.end() ; i++)

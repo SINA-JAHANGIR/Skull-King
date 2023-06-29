@@ -64,3 +64,11 @@ void customized_button::change_obj_name()
         this->setObjectName(button_card.get_type_string()+QString::number(button_card.get_value()));
     }
 }
+
+void customized_button::change_card_StyleSheet()
+{
+    QString p;
+    p = "QPushButton{border-image: url(:/photos/" + button_card.get_type_string() + " " + QString::number(button_card.get_value()) + ".png);}";
+    this->setStyleSheet(p);
+}
+

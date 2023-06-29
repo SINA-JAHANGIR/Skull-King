@@ -147,7 +147,7 @@ void client::slo_read_card()
                 game_client_page->player1.cards.erase(it_p1);
                 game_client_page->player2.cards.append(bp1);
                 game_client_page->player1.cards.append(bp2);
-                game_client_page->change_StyleSheet(bp2);
+                bp2->change_card_StyleSheet();
                 bp1->setEnabled(false);
                 socket->write(t.toStdString().c_str());
                 socket->waitForBytesWritten(-1);

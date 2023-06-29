@@ -33,6 +33,44 @@ game::~game()
 
 void game::set_all_cards()
 {
+    lbl_score_p1 = new QLabel(this);
+    lbl_score_p2 = new QLabel(this);
+    lbl_score_p1->setGeometry(QRect(width()/2-150,height()-270,300,35));
+    lbl_score_p2->setGeometry(QRect(width()/2-150,200,300,35));
+    QFont score_font = lbl_score_p1->font();
+    score_font.setPointSize(20);
+    score_font.setBold(true);
+    lbl_score_p1->setFont(score_font);
+    lbl_score_p2->setFont(score_font);
+    lbl_score_p1->setText("SCORE : "+QString::number(player1.score));
+    lbl_score_p2->setText("SCORE : "+QString::number(player2.score));
+    lbl_score_p1->setAlignment(Qt::AlignCenter);
+    lbl_score_p2->setAlignment(Qt::AlignCenter);
+    lbl_score_p1->setParent(this);
+    lbl_score_p1->show();
+    lbl_score_p2->setParent(this);
+    lbl_score_p2->show();
+    /*///////////////////////////////////////////////////////////////////////////////////////*/
+    player1.set_username("SINA-JAHANGIR");
+    player2.set_username("MEHDI-VAKILI");
+    /*///////////////////////////////////////////////////////////////////////////////////////*/
+    QLabel* lbl_p1 = new QLabel(this);
+    lbl_p1->setGeometry(QRect(width()/2-150,height()-240,300,35));
+    QFont username_font = lbl_p1->font();
+    username_font.setPointSize(20);
+    username_font.setBold(true);
+    lbl_p1->setFont(username_font);
+    lbl_p1->setText(player1.get_username());
+    lbl_p1->setAlignment(Qt::AlignCenter);
+    lbl_p1->setParent(this);
+    lbl_p1->show();
+    QLabel* lbl_p2 = new QLabel(this);
+    lbl_p2->setGeometry(QRect(width()/2-150,170,300,35));
+    lbl_p2->setFont(username_font);
+    lbl_p2->setText(player2.get_username());
+    lbl_p2->setAlignment(Qt::AlignCenter);
+    lbl_p2->setParent(this);
+    lbl_p2->show();
     for (int i = 0 ; i < 11 ; i++)
     {
         all_cards[i].set_value(i+1);
@@ -109,17 +147,50 @@ void game::set_all_cards()
     }
 }
 
-void game::change_StyleSheet(customized_button* input)
+
+void game::rasie_p2_cards()
 {
-    card temp = input->get_btn_card();
-    QString p;
-    p = "QPushButton{border-image: url(:/photos/" + temp.get_type_string() + " " + QString::number(temp.get_value()) + ".png);}";
-    input->setStyleSheet(p);
+    for (int i = 0 ; i < player2.cards.size() ; i++)
+    {
+        player2.cards[i]->raise();
+    }
 }
 
+void game::rasie_p1_cards()
+{
+    for (int i = 0 ; i < player1.cards.size() ; i++)
+    {
+        player1.cards[i]->raise();
+    }
+}
+
+void game::rasie_p2_win_cards()
+{
+    for (int i = 0 ; i < player2.win_cards.size() ; i++)
+    {
+        player2.win_cards[i]->raise();
+    }
+}
+
+void game::rasie_p1_win_cards()
+{
+    for (int i = 0 ; i < player1.win_cards.size() ; i++)
+    {
+        player1.win_cards[i]->raise();
+    }
+}
 
 void game::make_card(int n)
 {
+    player1.hide_cards();
+    player1.hide_win_cards();
+    player2.hide_cards();
+    player2.hide_win_cards();
+    player1.clear_cards();
+    player1.clear_win_cards();
+    player2.clear_cards();
+    player2.clear_win_cards();
+    first_flag = true;
     srand(time(NULL));
     if(n == 0)
     {
@@ -129,7 +200,7 @@ void game::make_card(int n)
             index[1] = ((rand() + 13)*13)%11;
         }while(index[0]==index[1]);
         player1.cards.append(all_cards_btn[index[0]]);
-        change_StyleSheet(all_cards_btn[index[0]]);
+        all_cards_btn[index[0]]->change_card_StyleSheet();
         all_cards_btn[index[0]]->setParent(ui->centralwidget);
         all_cards_btn[index[0]]->show();
         player2.cards.append(all_cards_btn[index[1]]);
@@ -166,7 +237,7 @@ void game::make_card(int n)
     sort_btn_cards(player2.cards);
     for (int i = 0 ; i < player1.cards.size() ; i++)
     {
-        change_StyleSheet(player1.cards[i]);
+        player1.cards[i]->change_card_StyleSheet();
         player1.cards[i]->setParent(ui->centralwidget);
         player1.cards[i]->show();
     }
@@ -179,8 +250,14 @@ void game::make_card(int n)
     // emit sig_send_card();
     /*//////////////////////////////////////////////////////////////////////*/
     player2.set_selected_card_btn(player2.cards[0]);
-    player2.set_forecast_number(0);
+    if (r>0)
+    {
+        player2.set_forecast_number(r);
+    }
     /*//////////////////////////////////////////////////////////////////////*/
+    rasie_p2_cards();
+    rasie_p1_cards();
+    dealer_animation();
 }
 
 
@@ -231,7 +308,14 @@ void game::dealer_animation()
         all_move_animation.append(player2_animation);
         player2_animation->start();
     }
-    connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_arrange_card()));
+    if (r == 0)
+    {
+        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_active_card_click()));
+    }
+    else
+    {
+        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_arrange_card()));
+    }
 }
 
 void game::slo_arrange_card()
@@ -272,10 +356,13 @@ void game::slo_p2_arrange_card()
         all_move_animation.append(player2_animation);
         player2_animation->start();
     }
-    if (first_flag)
+    if (r != 0)
     {
-        first_flag = false;
-        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_forecast()));
+        if (first_flag)
+        {
+            first_flag = false;
+            connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_forecast()));
+        }
     }
 }
 
@@ -289,7 +376,8 @@ void game::slo_forecast()
         connect(new_button,SIGNAL(sig_number_clicked(int)),this,SLOT(slo_selected_num_btn(int)));
         new_button->change_obj_name();
         new_button->setFixedSize(60,60);
-        QString temp="QPushButton{border-image: url(:/photos/" + QString::number(i) + ".png);}QPushButton:pressed{border-image: url(:/photos/click " + QString::number(i) + ".png);}";        new_button->setStyleSheet(temp);
+        QString temp="QPushButton{border-image: url(:/photos/A" + QString::number(i) + ".png);}QPushButton:pressed{border-image: url(:/photos/C" + QString::number(i) + ".png);}";
+        new_button->setStyleSheet(temp);
         all_forecast_btn.append(new_button);
         new_button->setParent(ui->centralwidget);
         new_button->show();
@@ -298,11 +386,10 @@ void game::slo_forecast()
     for (int j = 0 ; j < s ; j++ )
     {
         QPropertyAnimation *animation = new QPropertyAnimation(all_forecast_btn[j],"geometry");
-        animation->setDuration(1000);
-        int x1 = (width()/2) - (pow(-1,j)*(width()/2));
-        int x2 = (width()/2)-((s)*(60/2))+(j*60);
-        animation->setStartValue(QRect(x1,height()/2,60,60));
-        animation->setEndValue(QRect(x2,height()-300,60,60));
+        animation->setDuration(500);
+        int x = (width()/2)-((s)*(60/2))+(j*60);
+        animation->setStartValue(QRect(x,height()-500,60,60));
+        animation->setEndValue(QRect(x,height()-350,60,60));
         all_move_animation.append(animation);
         animation->start();
     }
@@ -347,8 +434,23 @@ void game::slo_selected_num_btn(int number)
     forecast_p2_btn = new customized_button(player2.get_forecast_number());
     forecast_p1_btn->change_obj_name();
     forecast_p2_btn->change_obj_name();
-    QString temp1="QPushButton{border-image: url(:/photos/" + QString::number(number) + ".png);}";
-    QString temp2="QPushButton{border-image: url(:/photos/" + QString::number(player2.get_forecast_number()) + ".png);}";
+    QString temp1 , temp2;
+    if (number == 0)
+    {
+        temp1 ="QPushButton{border-image: url(:/photos/B" + QString::number(number) + ".png);}";
+    }
+    else
+    {
+        temp1 ="QPushButton{border-image: url(:/photos/A" + QString::number(number) + ".png);}";
+    }
+    if (player2.get_forecast_number() == 0)
+    {
+        temp2="QPushButton{border-image: url(:/photos/B" + QString::number(player2.get_forecast_number()) + ".png);}";
+    }
+    else
+    {
+        temp2="QPushButton{border-image: url(:/photos/A" + QString::number(player2.get_forecast_number()) + ".png);}";
+    }
     forecast_p1_btn->setStyleSheet(temp1);
     forecast_p2_btn->setStyleSheet(temp2);
     forecast_p1_btn->setParent(ui->centralwidget);
@@ -359,8 +461,8 @@ void game::slo_selected_num_btn(int number)
     QPropertyAnimation *animation2 = new QPropertyAnimation(forecast_p2_btn,"geometry");
     animation1->setDuration(1000);
     animation2->setDuration(1000);
-    animation1->setStartValue(QRect(50,height(),60,60));
-    animation2->setStartValue(QRect(width()-160,0,60,60));
+    animation1->setStartValue(QRect(0,height()-60,60,60));
+    animation2->setStartValue(QRect(width()-60,0,60,60));
     animation1->setEndValue(QRect(50,height()-200,120,120));
     animation2->setEndValue(QRect(width()-160,50,120,120));
     all_move_animation.append(animation1);
@@ -425,6 +527,7 @@ void game::slo_selected_p1_card_btn(customized_button* input)
 
 void game::slo_selected_p2_card_btn()
 {
+
     iter it = player2.find_card(player2.get_selected_card_btn());
     player2.cards.erase(it);
     clear_move_animations();
@@ -435,7 +538,7 @@ void game::slo_selected_p2_card_btn()
     animation->setEndValue(QRect(width()/2-w/2 -30, (height()/2-h/2) - 30, w, h));
     all_move_animation.append(animation);
     animation->start();
-    change_StyleSheet(player2.get_selected_card_btn());
+    player2.get_selected_card_btn()->change_card_StyleSheet();
     slo_p2_arrange_card();
     if (turn == p1)
     {
@@ -480,55 +583,286 @@ void game::hand_win()
 {
     Sleep(700);
     clear_move_animations();
+    static int a1 = 0;
+    static int a2 = 0;
     if (hand_winner == p1)
     {
+        int size = player1.win_cards.size();
         player1.win_cards.append(player1.get_selected_card_btn());
         player1.win_cards.append(player2.get_selected_card_btn());
-        for (int i = 0 ; i < 2 ; i++)
+        rasie_p1_win_cards();
+        for (int i = size ; i < size + 2 ; i++)
         {
             QPropertyAnimation *animation = new QPropertyAnimation(player1.win_cards[i],"geometry");
             animation->setDuration(700);
             QRect temp = player1.win_cards[i]->geometry();
             animation->setStartValue(temp);
-            animation->setEndValue(QRect(175, (height() - 120), w/3, h/3));
+            animation->setEndValue(QRect(175, (height() - 120) - (a1 * 15), w/3, h/3));
             all_move_animation.append(animation);
             animation->start();
             player1.win_cards[i]->setStyleSheet(BACK);
         }
+        a1++;
+        if (r != 0)
+        {
+            if (player1.get_forecast_number() == (player1.win_cards.size()/2))
+            {
+                QString temp="QPushButton{border-image: url(:/photos/B" + QString::number(player1.get_forecast_number()) + ".png);}";
+                forecast_p1_btn->setStyleSheet(temp);
+            }
+            else if (player1.get_forecast_number() < (player1.win_cards.size()/2))
+            {
+                QString temp="QPushButton{border-image: url(:/photos/C" + QString::number(player1.get_forecast_number()) + ".png);}";
+                forecast_p1_btn->setStyleSheet(temp);
+            }
+        }
     }
     else
     {
+        int size = player2.win_cards.size();
         player2.win_cards.append(player1.get_selected_card_btn());
         player2.win_cards.append(player2.get_selected_card_btn());
-        for (int i = 0 ; i < 2 ; i++)
+        rasie_p2_win_cards();
+        for (int i = size ; i < size + 2 ; i++)
         {
             QPropertyAnimation *animation = new QPropertyAnimation(player2.win_cards[i],"geometry");
             animation->setDuration(700);
             QRect temp = player2.win_cards[i]->geometry();
             animation->setStartValue(temp);
-            animation->setEndValue(QRect(width() - 200, 60 , w/3, h/3));
+            animation->setEndValue(QRect(width() - 200, 60 + (a2 * 15) , w/3, h/3));
             all_move_animation.append(animation);
             animation->start();
             player2.win_cards[i]->setStyleSheet(BACK);
         }
+        a2++;
+        if (r != 0)
+        {
+            if (player2.get_forecast_number() == (player2.win_cards.size()/2))
+            {
+                QString temp="QPushButton{border-image: url(:/photos/B" + QString::number(player2.get_forecast_number()) + ".png);}";
+                forecast_p2_btn->setStyleSheet(temp);
+            }
+            else if (player2.get_forecast_number() < (player2.win_cards.size()/2))
+            {
+                QString temp="QPushButton{border-image: url(:/photos/C" + QString::number(player2.get_forecast_number()) + ".png);}";
+                forecast_p2_btn->setStyleSheet(temp);
+            }
+        }
     }
     player1.set_selected_card_btn(nullptr);
     player2.set_selected_card_btn(nullptr);
-
-    // ............................................................................
+    turn = hand_winner;
+    if (player1.cards.size() != 0)
+    {
+        /*//////////////////////////////////////////////////////////////////////////////////////*/
+        player2.set_selected_card_btn(player2.cards[0]);
+        /*/////////////////////////////////////////////////////////////////////////////////////*/
+        if (turn == p1)
+            connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_active_card_click()));
+        else
+            connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
+    }
+    else
+    {
+        a1 = 0;
+        a2 = 0;
+        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_hide_forecast_btn()));
+    }
 }
+
+void game::slo_hide_forecast_btn()
+{
+    if (r != 0)
+    {
+        forecast_p1_btn->raise();
+        forecast_p2_btn->raise();
+    }
+    int s1 = player1.win_cards.size();
+    for (int i = 0 ; i < s1; i++)
+    {
+        QPropertyAnimation *animation = new QPropertyAnimation(player1.win_cards[i],"geometry");
+        animation->setDuration(900);
+        QRect temp = player1.win_cards[i]->geometry();
+        animation->setStartValue(temp);
+        animation->setEndValue(QRect(0, height(), w/3, h/3));
+        all_move_animation.append(animation);
+        animation->start();
+        player1.win_cards[i]->setStyleSheet(BACK);
+    }
+    int s2 = player2.win_cards.size();
+    for (int i = 0 ; i < s2 ; i++)
+    {
+        QPropertyAnimation *animation = new QPropertyAnimation(player2.win_cards[i],"geometry");
+        animation->setDuration(900);
+        QRect temp = player2.win_cards[i]->geometry();
+        animation->setStartValue(temp);
+        animation->setEndValue(QRect(width(), 0, w/3, h/3));
+        all_move_animation.append(animation);
+        animation->start();
+        player2.win_cards[i]->setStyleSheet(BACK);
+    }
+    if (r != 0)
+    {
+        QPropertyAnimation *animation1 = new QPropertyAnimation(forecast_p1_btn,"geometry");
+        animation1->setDuration(1000);
+        QRect temp1 = forecast_p1_btn->geometry();
+        animation1->setStartValue(temp1);
+        animation1->setEndValue(QRect(0, height() ,60, 60));
+        all_move_animation.append(animation1);
+        animation1->start();
+        QPropertyAnimation *animation2 = new QPropertyAnimation(forecast_p2_btn,"geometry");
+        animation2->setDuration(1000);
+        QRect temp2 = forecast_p2_btn->geometry();
+        animation2->setStartValue(temp2);
+        animation2->setEndValue(QRect(width(), 0 ,60, 60));
+        all_move_animation.append(animation2);
+        animation2->start();
+    }
+    connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_rate_round()));
+
+}
+
+
+void game::slo_rate_round()
+{
+    Sleep(700);
+    if (r == 0)
+    {
+        r++;
+        make_card(r);
+    }
+    else
+    {
+        forecast_p1_btn->hide();
+        forecast_p2_btn->hide();
+        delete forecast_p1_btn;
+        delete forecast_p2_btn;
+        // player1.score :
+        if (player1.get_forecast_number() == 0)
+        {
+            if (player1.win_cards.size() == 0)
+            {
+                player1.score += (r*10);
+            }
+            else
+            {
+                player1.score -= (r*10);
+            }
+        }
+        else
+        {
+            if (player1.get_forecast_number() == player1.win_cards.size()/2)
+            {
+                player1.score += (player1.get_forecast_number()*10);
+            }
+            else
+            {
+                player1.score -= (abs(player1.get_forecast_number()-(player1.win_cards.size()/2))*10);
+            }
+        }
+        int s1 = player1.win_cards.size();
+        for (int i = 0 ; i < s1 ; i += 2)
+        {
+            if (player1.win_cards[i]->get_btn_card().get_type() == queen ||player1.win_cards[i+1]->get_btn_card().get_type() == queen)
+            {
+                player1.score += 20;
+            }
+            if (player1.win_cards[i]->get_btn_card().get_type() == king ||player1.win_cards[i+1]->get_btn_card().get_type() == king)
+            {
+                player1.score += 15;
+            }
+            if (player1.win_cards[i]->get_btn_card().get_type() == pirate ||player1.win_cards[i+1]->get_btn_card().get_type() == pirate)
+            {
+                player1.score += 10;
+            }
+        }
+        // player2.score :
+        if (player2.get_forecast_number() == 0)
+        {
+            if (player2.win_cards.size() == 0)
+            {
+                player2.score += (r*10);
+            }
+            else
+            {
+                player2.score -= (r*10);
+            }
+        }
+        else
+        {
+            if (player2.get_forecast_number() == player2.win_cards.size()/2)
+            {
+                player2.score += (player2.get_forecast_number()*10);
+            }
+            else
+            {
+                player2.score -= (abs(player2.get_forecast_number()-(player2.win_cards.size()/2))*10);
+            }
+        }
+        int s2 = player2.win_cards.size();
+        for (int i = 0 ; i < s2 ; i += 2)
+        {
+            if (player2.win_cards[i]->get_btn_card().get_type() == queen ||player2.win_cards[i+1]->get_btn_card().get_type() == queen)
+            {
+                player2.score += 20;
+            }
+            if (player2.win_cards[i]->get_btn_card().get_type() == king ||player2.win_cards[i+1]->get_btn_card().get_type() == king)
+            {
+                player2.score += 15;
+            }
+            if (player2.win_cards[i]->get_btn_card().get_type() == pirate ||player2.win_cards[i+1]->get_btn_card().get_type() == pirate)
+            {
+                player2.score += 10;
+            }
+        }
+        lbl_score_p1->hide();
+        lbl_score_p2->hide();
+        lbl_score_p1->setText("SCORE : " + QString::number(player1.score));
+        lbl_score_p2->setText("SCORE : " + QString::number(player2.score));
+        if (player1.score > 0)
+            lbl_score_p1->setStyleSheet("QLabel {color: green;}");
+        else if (player1.score == 0)
+            lbl_score_p1->setStyleSheet("QLabel {color: black;}");
+        else
+            lbl_score_p1->setStyleSheet("QLabel {color: red;}");
+        if (player2.score > 0)
+            lbl_score_p2->setStyleSheet("QLabel {color: green;}");
+        else if (player2.score == 0)
+            lbl_score_p2->setStyleSheet("QLabel {color: black;}");
+        else
+            lbl_score_p2->setStyleSheet("QLabel {color: red;}");
+        lbl_score_p1->show();
+        lbl_score_p2->show();
+        if (r < 7)
+        {
+            r++;
+            make_card(r);
+        }
+        else
+        {
+            // ..........................
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 void game::game_server_start()
 {
-    make_card(7);
-    while(wait)
-    {
-
-    }
-    dealer_animation();
+    make_card(r);
 }
 
 void game::game_client_start()
@@ -540,7 +874,7 @@ void game::game_client_start()
     for(int i=0 ; i < player1.cards.size() ; i++)
     {
         player2.cards[i]->setStyleSheet(BACK);
-        change_StyleSheet(player1.cards[i]);
+        player1.cards[i]->change_card_StyleSheet();
     }
     dealer_animation();
 }

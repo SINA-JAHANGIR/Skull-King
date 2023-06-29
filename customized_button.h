@@ -20,6 +20,7 @@ public:
     void set_btn_card(card);
     card get_btn_card();
     void change_obj_name();
+    void change_card_StyleSheet();
 signals:
     void sig_number_clicked(int);
     void sig_card_clicked(customized_button*);
