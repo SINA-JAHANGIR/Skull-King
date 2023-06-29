@@ -11,8 +11,8 @@ class player
 {
 private:
     QString username;
-    int forecast_number;
-    customized_button* selected_card_btn;
+    int forecast_number = -1;
+    customized_button* selected_card_btn = nullptr;
 public:
     QVector<customized_button*> cards;
     QVector<customized_button*> win_cards;

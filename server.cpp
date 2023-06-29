@@ -16,6 +16,8 @@ server::server(QWidget *parent) :
     connect(game_server_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
     connect(game_server_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
     connect(this,SIGNAL(sig_change_request()),this,SLOT(slo_change_request()));
+    connect(game_server_page,SIGNAL(sig_send_forecast()),this,SLOT(slo_send_forecast()));
+    connect(this,SIGNAL(sig_game_continue()),&game_server_page->loop,SLOT(quit()));
 }
 
 server::~server()
@@ -114,11 +116,6 @@ void server::slo_send_one_card(card input)
     QString t ="selected";
     client_socket->write(t.toStdString().c_str());
     client_socket->waitForBytesWritten(-1);
-    spy->wait(1000);
-    QByteArray card_byte = card_to_qbytearray(input);
-    client_socket->write(card_byte);
-    client_socket->waitForBytesWritten(-1);
-    spy->wait(1000);
 }
 
 void server::slo_read_card()
@@ -177,18 +174,48 @@ void server::slo_read_card()
                 t="end";
                 client_socket->write(t.toStdString().c_str());
                 client_socket->waitForReadyRead(-1);
-               QByteArray temp2 = client_socket->readAll();
+                QByteArray temp2 = client_socket->readAll();
                 game_server_page->wait = false;
             }
-            else
+            else if(received == "forecast")
             {
-                card temp = qbytearray_to_card(received);
+                QString temp = "send forecast";
+                client_socket->write(temp.toStdString().c_str());
+                client_socket->waitForBytesWritten(-1);
+                client_socket->waitForReadyRead(-1);
+                QByteArray temp2 = client_socket->readAll();
+                game_server_page->player2.set_forecast_number(temp2.toInt());
+            }
+            else if(received == "send forecast")
+            {
+                QString temp = QString::number(game_server_page->player1.get_forecast_number());
+                client_socket->write(temp.toStdString().c_str());
+                client_socket->waitForBytesWritten(-1);
+            }
+            else if(received=="selected")
+            {
+                QString message = "send one card";
+                client_socket->write(message.toStdString().c_str());
+                client_socket->waitForBytesWritten(-1);
+                client_socket->waitForReadyRead(-1);
+                QByteArray card_byte =  client_socket->readAll();
+                card temp = qbytearray_to_card(card_byte);
+                game_server_page->player2.set_selected_card_btn(game_server_page->all_cards_btn[temp.get_number()]);
                 //...
 
                 received.clear();
-                QString t ="ok";
-                client_socket->write(t.toStdString().c_str());
+                message = "readed";
+                client_socket->write(message.toStdString().c_str());
                 client_socket->waitForBytesWritten(-1);
+                emit sig_game_continue();
+            }
+            else if( received=="send one card")
+            {
+                QByteArray card_byte = card_to_qbytearray(game_server_page->player1.get_selected_card_btn()->get_btn_card());
+                client_socket->write(card_byte);
+                client_socket->waitForBytesWritten(-1);
+                client_socket->waitForReadyRead(-1);
+                QByteArray temp2 = client_socket->readAll();
             }
         }
     }
@@ -222,4 +249,11 @@ void server::slo_change_request()
         client_socket->waitForBytesWritten(-1);
         msbox.close();
     }
+}
+
+void server::slo_send_forecast()
+{
+    QString temp = "forecast";
+    client_socket->write(temp.toStdString().c_str());
+    client_socket->waitForBytesWritten(-1);
 }

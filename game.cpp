@@ -176,10 +176,10 @@ void game::make_card(int n)
         player2.cards[i]->setParent(ui->centralwidget);
         player2.cards[i]->show();
     }
-    // emit sig_send_card();
+     emit sig_send_card();
     /*//////////////////////////////////////////////////////////////////////*/
-    player2.set_selected_card_btn(player2.cards[0]);
-    player2.set_forecast_number(0);
+//    player2.set_selected_card_btn(player2.cards[0]);
+//    player2.set_forecast_number(0);
     /*//////////////////////////////////////////////////////////////////////*/
 }
 
@@ -343,6 +343,13 @@ void game::slo_selected_num_btn(int number)
     inactive_num_click();
     clear_all_forecast_btn();
     player1.set_forecast_number(number);
+    emit sig_send_forecast();
+    if(player2.get_forecast_number() == -1)
+    {
+        auto lamda = [this](){while(this->player2.get_forecast_number() == -1){}};
+        std::thread wait = std::thread(lamda);
+        wait.join();
+    }
     forecast_p1_btn = new customized_button(number);
     forecast_p2_btn = new customized_button(player2.get_forecast_number());
     forecast_p1_btn->change_obj_name();
@@ -398,6 +405,10 @@ void game::inactive_card_click()
 
 void game::slo_selected_p1_card_btn(customized_button* input)
 {
+    if (turn == p2 && player2.get_selected_card_btn() == nullptr)
+    {
+        loop.exec();
+    }
     inactive_card_click();
     input->get_btn_card().set_selected(true);
     player1.set_selected_card_btn(input);
@@ -420,11 +431,16 @@ void game::slo_selected_p1_card_btn(customized_button* input)
     {
         connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_compare_two_cards()));
     }
+    emit sig_send_one_card(input->get_btn_card());
 }
 
 
 void game::slo_selected_p2_card_btn()
 {
+    if (player2.get_selected_card_btn() == nullptr)
+    {
+        loop.exec();
+    }
     iter it = player2.find_card(player2.get_selected_card_btn());
     player2.cards.erase(it);
     clear_move_animations();
