@@ -20,6 +20,12 @@ public:
 private slots:
     void on_btn_play_clicked();
 
+    void on_btn_exit_clicked();
+
+    void on_btn_setting_clicked();
+
+    void on_btn_history_clicked();
+
 private:
     Ui::MainWindow *ui;
     start* start_page;

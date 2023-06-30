@@ -1,12 +1,18 @@
 #include "client.h"
 #include "ui_client.h"
 #include "ui_game.h"
+#include <QScreen>
 
 client::client(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::client)
 {
     ui->setupUi(this);
+    this->setFixedSize(this->size());
+    const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+    const int x = (screenGeometry.width() - width()) / 2;
+    const int y = (screenGeometry.height() - height()) / 2;
+    move(x, y - 30);
     socket = new QTcpSocket;
     socket->connectToHost("127.0.0.1",1225);
     connect(socket,SIGNAL(connected()),this,SLOT(connected_to_server()));

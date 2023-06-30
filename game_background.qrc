@@ -115,5 +115,8 @@
         <file>photos/C12.png</file>
         <file>photos/C13.png</file>
         <file>photos/C14.png</file>
+        <file>photos/ship.png</file>
+        <file>photos/Pirate skull.png</file>
+        <file>photos/skull-king-pirate.png</file>
     </qresource>
 </RCC>

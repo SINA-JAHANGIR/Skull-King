@@ -1,11 +1,12 @@
-#include "mainwindow.h"
+#include "game_logo.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    game_logo logo;
+    logo.setWindowTitle("Skull King");
+    logo.show();
     return a.exec();
 }

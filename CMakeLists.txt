@@ -14,13 +14,32 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
+        game_logo.h
+        game_logo.cpp
+        game_logo.ui
+        login.cpp
+        login.h
+        login.ui
+        sign_up.cpp
+        sign_up.h
+        sign_up.ui
+        sign_in.cpp
+        sign_in.h
+        sign_in.ui
+        setting.cpp
+        setting.h
+        setting.ui
+        change.h
+        change.cpp
+        change.ui
+        history.cpp
+        history.h
+        history.ui
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
         card.h
         card.cpp
-        data.h
-        data.cpp
         person.h
         person.cpp
         player.h
