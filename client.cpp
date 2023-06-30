@@ -1,6 +1,9 @@
 #include "client.h"
 #include "ui_client.h"
 #include "ui_game.h"
+#include <windows.h>
+
+#define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 
 client::client(QWidget *parent) :
     QMainWindow(parent),
@@ -11,15 +14,18 @@ client::client(QWidget *parent) :
     socket->connectToHost("127.0.0.1",1225);
     connect(socket,SIGNAL(connected()),this,SLOT(connected_to_server()));
 
+    connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
+
     game_client_page = new game(this);
-    game_client_page->set_all_cards();
     connect(game_client_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
     connect(game_client_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
     thread = std::thread(&client::slo_read_card,this);
     spy = new QSignalSpy(this,SIGNAL(sig_continue()));
-    game_client_page->turn = p2;
+//    game_client_page->turn = p2;
     connect(this,SIGNAL(sig_game_continue()),&game_client_page->loop,SLOT(quit()));
     connect(game_client_page,SIGNAL(sig_send_forecast()),this,SLOT(slo_send_forecast()));
+    connect(this,SIGNAL(sig_start()),this,SLOT(slo_call_dealer_animation()));
+    connect(this,SIGNAL(sig_get_forecast()),&game_client_page->start,SLOT(quit()));
 }
 
 client::~client()
@@ -75,14 +81,15 @@ void client::on_btn_start_clicked()
 void client::slo_read_card()
 {
         QString t ="ok";
-    while(true)
-    {
-        while(socket->waitForReadyRead(-1))
-        {
+//    while(true)
+//    {
+//        while(socket->waitForReadyRead(-1))
+//        {
             QByteArray received = socket->readAll();
             if(received=="end")
             {
-                game_client_page->wait=false;
+//                game_client_page->wait=false;
+                emit sig_start();
                 socket->write(t.toStdString().c_str());
                 socket->waitForBytesWritten(-1);
             }
@@ -102,6 +109,7 @@ void client::slo_read_card()
                 game_client_page->player1.cards.append(game_client_page->all_cards_btn[temp.get_number()]);
                 game_client_page->all_cards_btn[temp.get_number()]->setParent(game_client_page->ui->centralwidget);
                 game_client_page->all_cards_btn[temp.get_number()]->show();
+                game_client_page->all_cards_btn[temp.get_number()]->change_card_StyleSheet();
                 socket->write(t.toStdString().c_str());
                 socket->waitForBytesWritten(-1);
             }
@@ -115,6 +123,7 @@ void client::slo_read_card()
                 game_client_page->player2.cards.append(game_client_page->all_cards_btn[temp.get_number()]);
                 game_client_page->all_cards_btn[temp.get_number()]->setParent(game_client_page->ui->centralwidget);
                 game_client_page->all_cards_btn[temp.get_number()]->show();
+                game_client_page->all_cards_btn[temp.get_number()]->setStyleSheet(BACK);
                 socket->write(t.toStdString().c_str());
                 socket->waitForBytesWritten(-1);
             }
@@ -175,6 +184,7 @@ void client::slo_read_card()
                 socket->waitForReadyRead(-1);
                 QByteArray temp2 = socket->readAll();
                 game_client_page->player2.set_forecast_number(temp2.toInt());
+                emit sig_get_forecast();
             }
             else if(received == "send forecast")
             {
@@ -186,8 +196,8 @@ void client::slo_read_card()
             {
                 emit sig_continue();
             }
-        }
-    }
+//        }
+//    }
 }
 
 void client::slo_send_one_card(card input)
@@ -211,4 +221,16 @@ void client::slo_send_forecast()
     QString temp = "forecast";
     socket->write(temp.toStdString().c_str());
     socket->waitForBytesWritten(-1);
+}
+
+void client::slo_call_dealer_animation()
+{
+    if(game_client_page->r>0)
+    {
+        game_client_page->sort_btn_cards(game_client_page->player1.cards);
+        game_client_page->sort_btn_cards(game_client_page->player2.cards);
+        game_client_page->rasie_p2_cards();
+        game_client_page->rasie_p1_cards();
+    }
+    game_client_page->dealer_animation();
 }

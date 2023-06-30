@@ -50,10 +50,7 @@ void game::set_all_cards()
     lbl_score_p1->show();
     lbl_score_p2->setParent(this);
     lbl_score_p2->show();
-    /*///////////////////////////////////////////////////////////////////////////////////////*/
-    player1.set_username("SINA-JAHANGIR");
-    player2.set_username("MEHDI-VAKILI");
-    /*///////////////////////////////////////////////////////////////////////////////////////*/
+
     QLabel* lbl_p1 = new QLabel(this);
     lbl_p1->setGeometry(QRect(width()/2-150,height()-240,300,35));
     QFont username_font = lbl_p1->font();
@@ -182,15 +179,6 @@ void game::rasie_p1_win_cards()
 
 void game::make_card(int n)
 {
-    player1.hide_cards();
-    player1.hide_win_cards();
-    player2.hide_cards();
-    player2.hide_win_cards();
-    player1.clear_cards();
-    player1.clear_win_cards();
-    player2.clear_cards();
-    player2.clear_win_cards();
-    first_flag = true;
     srand(time(NULL));
     if(n == 0)
     {
@@ -247,16 +235,9 @@ void game::make_card(int n)
         player2.cards[i]->setParent(ui->centralwidget);
         player2.cards[i]->show();
     }
-     emit sig_send_card();
-    /*//////////////////////////////////////////////////////////////////////*/
-    player2.set_selected_card_btn(player2.cards[0]);
-    if (r>0)
-    {
-        player2.set_forecast_number(r);
-    }
-    /*//////////////////////////////////////////////////////////////////////*/
     rasie_p2_cards();
     rasie_p1_cards();
+    emit sig_send_card();
     dealer_animation();
 }
 
@@ -369,6 +350,10 @@ void game::slo_p2_arrange_card()
 
 void game::slo_forecast()
 {
+    if(turn == p2)
+    {
+        start.exec();
+    }
     for(int i = 0 ; i <= player1.cards.size() ; i++)
     {
         customized_button *new_button = new customized_button(i);
@@ -430,12 +415,14 @@ void game::slo_selected_num_btn(int number)
     inactive_num_click();
     clear_all_forecast_btn();
     player1.set_forecast_number(number);
-    emit sig_send_forecast();
-    if(player2.get_forecast_number() == -1)
+    if(turn == p1)
     {
-        auto lamda = [this](){while(this->player2.get_forecast_number() == -1){}};
-        std::thread wait = std::thread(lamda);
-        wait.join();
+        emit sig_send_forecast();
+        start.exec();
+    }
+    if(turn == p2)
+    {
+        emit sig_send_forecast();
     }
     forecast_p1_btn = new customized_button(number);
     forecast_p2_btn = new customized_button(player2.get_forecast_number());
@@ -494,6 +481,27 @@ void game::slo_active_card_click()
     {
         player1.cards[i]->setEnabled(true);
     }
+//    if(turn = p1)
+//    {
+//        int s = player1.cards.size();
+//        for (int i = 0 ; i < s ; i++)
+//        {
+//            player1.cards[i]->setEnabled(true);
+//        }
+//    }
+//    else
+//    {
+//        int counter = 0;
+//        for(int i=0 ; i < player1.cards.size() ; i++)
+//        {
+//            if( player1.cards[i]->get_btn_card().get_get_type_string() == player2.get_selected_card_btn()->get_btn_card().get_type_string() )
+//            {
+//                counter++;
+//            }
+//        }
+
+//    }
+
 }
 
 void game::inactive_card_click()
@@ -507,10 +515,6 @@ void game::inactive_card_click()
 
 void game::slo_selected_p1_card_btn(customized_button* input)
 {
-    if (turn == p2 && player2.get_selected_card_btn() == nullptr)
-    {
-        loop.exec();
-    }
     inactive_card_click();
     input->get_btn_card().set_selected(true);
     player1.set_selected_card_btn(input);
@@ -525,7 +529,7 @@ void game::slo_selected_p1_card_btn(customized_button* input)
     all_move_animation.append(animation);
     animation->start();
     slo_p1_arrange_card();
-    if (turn == p1)
+    if (turn == p1 || r == 0)
     {
         connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
     }
@@ -568,6 +572,10 @@ void game::slo_selected_p2_card_btn()
 
 void game::slo_compare_two_cards()
 {
+    if (player2.get_selected_card_btn() == nullptr)
+    {
+        loop.exec();
+    }
     if (turn == p1)
     {
         if (player1.get_selected_card_btn()->get_btn_card()>player2.get_selected_card_btn()->get_btn_card() == true)
@@ -669,9 +677,6 @@ void game::hand_win()
     turn = hand_winner;
     if (player1.cards.size() != 0)
     {
-        /*//////////////////////////////////////////////////////////////////////////////////////*/
-        player2.set_selected_card_btn(player2.cards[0]);
-        /*/////////////////////////////////////////////////////////////////////////////////////*/
         if (turn == p1)
             connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_active_card_click()));
         else
@@ -744,7 +749,7 @@ void game::slo_rate_round()
     if (r == 0)
     {
         r++;
-        make_card(r);
+        emit sig_end_of_round();
     }
     else
     {
@@ -851,7 +856,16 @@ void game::slo_rate_round()
         if (r < 7)
         {
             r++;
-            make_card(r);
+            first_flag = true;
+            player1.hide_cards();
+            player1.hide_win_cards();
+            player2.hide_cards();
+            player2.hide_win_cards();
+            player1.clear_cards();
+            player1.clear_win_cards();
+            player2.clear_cards();
+            player2.clear_win_cards();
+            emit sig_end_of_round();
         }
         else
         {
@@ -882,18 +896,8 @@ void game::game_server_start()
 
 void game::game_client_start()
 {
-    while(wait)
-    {
 
-    }
-    for(int i=0 ; i < player1.cards.size() ; i++)
-    {
-        player2.cards[i]->setStyleSheet(BACK);
-        player1.cards[i]->change_card_StyleSheet();
-    }
-    dealer_animation();
 }
-
 
 
 
@@ -938,4 +942,3 @@ void game::on_btn_change_clicked()
 {
     emit sig_change_card();
 }
-

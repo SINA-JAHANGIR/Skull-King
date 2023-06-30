@@ -49,6 +49,7 @@ signals:
     void sig_send_one_card(card);
     void sig_change_card();
     void sig_send_forecast();
+    void sig_end_of_round();
 
 private:
     Ui::game *ui;
@@ -69,6 +70,7 @@ private:
     bool first_flag = true;
     bool wait = true;
     QEventLoop loop;
+    QEventLoop start;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);
