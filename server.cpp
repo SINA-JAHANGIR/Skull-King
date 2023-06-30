@@ -1,6 +1,7 @@
 #include "server.h"
 #include "ui_server.h"
 #include <QScreen>
+#include <windows.h>
 
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 
@@ -24,6 +25,8 @@ server::server(QWidget *parent) :
     connect(this,SIGNAL(sig_change_request()),this,SLOT(slo_change_request()));
     connect(game_server_page,SIGNAL(sig_send_forecast()),this,SLOT(slo_send_forecast()));
     connect(this,SIGNAL(sig_game_continue()),&game_server_page->loop,SLOT(quit()));
+    connect(game_server_page,SIGNAL(sig_end_of_round()),this,SLOT(slo_end_of_round()));
+    connect(this,SIGNAL(sig_get_forecast()),&game_server_page->start,SLOT(quit()));
 }
 
 server::~server()
@@ -34,6 +37,7 @@ server::~server()
 
 void server::connection_new(){
     client_socket = game_server->nextPendingConnection();
+    connect(client_socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
     //this->ui->btn_start->setEnabled(true);
     thread = std::thread(&server::slo_read_card,this);
     spy = new QSignalSpy(this,SIGNAL(sig_continue()));
@@ -127,11 +131,11 @@ void server::slo_send_one_card(card input)
 void server::slo_read_card()
 {
     QByteArray received;
-    while(true)
-    {
+//    while(true)
+//    {
         static int n =0 ;
-        while(client_socket->waitForReadyRead(-1))
-        {
+//        while(client_socket->waitForReadyRead(-1))
+//        {
             received = client_socket->readAll();
             if(received == "ok")
             {
@@ -181,6 +185,7 @@ void server::slo_read_card()
                 client_socket->write(t.toStdString().c_str());
                 client_socket->waitForReadyRead(-1);
                 QByteArray temp2 = client_socket->readAll();
+                temp2.clear();
                 game_server_page->wait = false;
             }
             else if(received == "forecast")
@@ -191,6 +196,7 @@ void server::slo_read_card()
                 client_socket->waitForReadyRead(-1);
                 QByteArray temp2 = client_socket->readAll();
                 game_server_page->player2.set_forecast_number(temp2.toInt());
+                emit sig_get_forecast();
             }
             else if(received == "send forecast")
             {
@@ -223,8 +229,8 @@ void server::slo_read_card()
                 client_socket->waitForReadyRead(-1);
                 QByteArray temp2 = client_socket->readAll();
             }
-        }
-    }
+//        }
+//    }
 }
 
 void server::slo_change_card()
@@ -262,4 +268,9 @@ void server::slo_send_forecast()
     QString temp = "forecast";
     client_socket->write(temp.toStdString().c_str());
     client_socket->waitForBytesWritten(-1);
+}
+
+void server::slo_end_of_round()
+{
+    game_server_page->make_card(game_server_page->r);
 }

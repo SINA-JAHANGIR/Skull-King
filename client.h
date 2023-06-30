@@ -30,6 +30,7 @@ public slots:
     void slo_send_one_card(card);
     void slo_change_card();
     void slo_send_forecast();
+    void slo_call_dealer_animation();
 
 private slots:
     void on_btn_start_clicked();
@@ -37,6 +38,8 @@ private slots:
 signals:
     void sig_continue();
     void sig_game_continue();
+    void sig_start();
+    void sig_get_forecast();
 
 
 private:
