@@ -17,6 +17,7 @@ game::game(QWidget *parent) :
     ui(new Ui::game)
 {
     ui->setupUi(this);
+    par = parent;
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
@@ -33,6 +34,10 @@ game::~game()
 
 void game::set_all_cards()
 {
+    /*//////////////////////////////////////////////////////////////////////////////////////////*/
+    player1.set_username("SINA-JAHANGIR");
+    player2.set_username("MEHDI-VAKILI");
+    /*//////////////////////////////////////////////////////////////////////////////////////////*/
     lbl_score_p1 = new QLabel(this);
     lbl_score_p2 = new QLabel(this);
     lbl_score_p1->setGeometry(QRect(width()/2-150,height()-270,300,35));
@@ -40,6 +45,7 @@ void game::set_all_cards()
     QFont score_font = lbl_score_p1->font();
     score_font.setPointSize(20);
     score_font.setBold(true);
+    score_font.setFamily("Tempus Sans ITC");
     lbl_score_p1->setFont(score_font);
     lbl_score_p2->setFont(score_font);
     lbl_score_p1->setText("SCORE : "+QString::number(player1.score));
@@ -51,23 +57,24 @@ void game::set_all_cards()
     lbl_score_p2->setParent(this);
     lbl_score_p2->show();
 
-    QLabel* lbl_p1 = new QLabel(this);
-    lbl_p1->setGeometry(QRect(width()/2-150,height()-240,300,35));
-    QFont username_font = lbl_p1->font();
+    lbl_username_p1 = new QLabel(this);
+    lbl_username_p1->setGeometry(QRect(width()/2-150,height()-240,300,35));
+    QFont username_font = lbl_username_p1->font();
     username_font.setPointSize(20);
     username_font.setBold(true);
-    lbl_p1->setFont(username_font);
-    lbl_p1->setText(player1.get_username());
-    lbl_p1->setAlignment(Qt::AlignCenter);
-    lbl_p1->setParent(this);
-    lbl_p1->show();
-    QLabel* lbl_p2 = new QLabel(this);
-    lbl_p2->setGeometry(QRect(width()/2-150,170,300,35));
-    lbl_p2->setFont(username_font);
-    lbl_p2->setText(player2.get_username());
-    lbl_p2->setAlignment(Qt::AlignCenter);
-    lbl_p2->setParent(this);
-    lbl_p2->show();
+    username_font.setFamily("Tempus Sans ITC");
+    lbl_username_p1->setFont(username_font);
+    lbl_username_p1->setText(player1.get_username());
+    lbl_username_p1->setAlignment(Qt::AlignCenter);
+    lbl_username_p1->setParent(this);
+    lbl_username_p1->show();
+    lbl_username_p2 = new QLabel(this);
+    lbl_username_p2->setGeometry(QRect(width()/2-150,170,300,35));
+    lbl_username_p2->setFont(username_font);
+    lbl_username_p2->setText(player2.get_username());
+    lbl_username_p2->setAlignment(Qt::AlignCenter);
+    lbl_username_p2->setParent(this);
+    lbl_username_p2->show();
     for (int i = 0 ; i < 11 ; i++)
     {
         all_cards[i].set_value(i+1);
@@ -869,16 +876,126 @@ void game::slo_rate_round()
         }
         else
         {
-            // ..........................
+            game_win();
         }
     }
 }
 
 
+void game::game_win()
+{
+    QLabel* lbl_logo = new QLabel(this);
+    lbl_logo = new QLabel(this);
+    lbl_logo->setParent(ui->centralwidget);
+    QPixmap pixmap(":/photos/game logo.png");
+    lbl_logo->setPixmap(pixmap);
+    lbl_logo->raise();
+    lbl_logo->show();
+    QLabel* lbl_win = new QLabel(this);
+    QFont win_font = lbl_win->font();
+    win_font.setPointSize(70);
+    win_font.setBold(true);
+    win_font.setFamily("Tempus Sans ITC");
+    lbl_win->setFont(win_font);
+    lbl_win->setAlignment(Qt::AlignCenter);
+    lbl_win->setParent(this);
+    QLabel* lbl_coin = new QLabel(this);
+    QLabel* lbl_coin2 = new QLabel(this);
+    QPixmap pixmap2(":/photos/coin.png");
+    lbl_coin->setPixmap(pixmap2);
+    lbl_coin2->setPixmap(pixmap2);
+    QPropertyAnimation* animation = new QPropertyAnimation(lbl_logo,"geometry");
+    QPropertyAnimation* animation1u = new QPropertyAnimation(lbl_username_p1,"geometry");
+    QPropertyAnimation* animation1s = new QPropertyAnimation(lbl_score_p1,"geometry");
+    QPropertyAnimation* animation2u = new QPropertyAnimation(lbl_username_p2,"geometry");
+    QPropertyAnimation* animation2s = new QPropertyAnimation(lbl_score_p2,"geometry");
+    all_move_animation.append(animation);
+    all_move_animation.append(animation1u);
+    all_move_animation.append(animation1s);
+    all_move_animation.append(animation2u);
+    all_move_animation.append(animation2s);
+    animation->setStartValue(QRect(width()/2-325,-100,650,375));
+    animation->setEndValue(QRect(width()/2-325,50,650,375));
+    QRect temp1u = lbl_username_p1->geometry();
+    QRect temp1s = lbl_score_p1->geometry();
+    QRect temp2u = lbl_username_p2->geometry();
+    QRect temp2s = lbl_score_p2->geometry();
+    animation1u->setStartValue(temp1u);
+    animation1s->setStartValue(temp1s);
+    animation2u->setStartValue(temp2u);
+    animation2s->setStartValue(temp2s);
+    if (player1.score > player2.score)
+    {
+        winner = p1;
+        lbl_win->setText("YOU WIN !");
+        lbl_win->setStyleSheet("QLabel {color: green;}");
+        animation1u->setEndValue(QRect(width()/2-500,450,600,70));
+        animation1s->setEndValue(QRect(width()/2-100,450,600,70));
+        animation2u->setEndValue(QRect(width()/2-500,500,600,70));
+        animation2s->setEndValue(QRect(width()/2-100,500,600,70));
+    }
+    else if(player2.score > player1.score)
+    {
+        winner = p2;
+        lbl_win->setText("YOU LOSE !");
+        lbl_win->setStyleSheet("QLabel {color: red;}");
+        animation2u->setEndValue(QRect(width()/2-500,450,600,70));
+        animation2s->setEndValue(QRect(width()/2-100,450,600,70));
+        animation1u->setEndValue(QRect(width()/2-500,500,600,70));
+        animation1s->setEndValue(QRect(width()/2-100,500,600,70));
+    }
+    else
+    {
+        winner = status::equal;
+        lbl_win->setText("Draw !");
+        lbl_win->setStyleSheet("QLabel {color: yellow;}");
+        animation1u->setEndValue(QRect(width()/2-500,450,600,70));
+        animation1s->setEndValue(QRect(width()/2-100,450,600,70));
+        animation2u->setEndValue(QRect(width()/2-500,500,600,70));
+        animation2s->setEndValue(QRect(width()/2-100,500,600,70));
+    }
+    lbl_win->show();
+    lbl_coin->show();
+    lbl_coin2->show();
+    QPropertyAnimation* animationw = new QPropertyAnimation(lbl_win,"geometry");
+    all_move_animation.append(animationw);
+    animationw->setStartValue(QRect(width()/2-300,height(),600,100));
+    animationw->setEndValue(QRect(width()/2-300,590,600,100));
+    QPropertyAnimation* animationc = new QPropertyAnimation(lbl_coin,"geometry");
+    all_move_animation.append(animationc);
+    animationc->setStartValue(QRect(width()/2-380,height(),100,100));
+    animationc->setEndValue(QRect(width()/2-380,590,100,100));
+    QPropertyAnimation* animationc2 = new QPropertyAnimation(lbl_coin2,"geometry");
+    all_move_animation.append(animationc2);
+    animationc2->setStartValue(QRect(width()/2+290,height(),100,100));
+    animationc2->setEndValue(QRect(width()/2+290,590,100,100));
+    lbl_win->raise();
+    animation->setDuration(700);
+    animationw->setDuration(700);
+    animationc->setDuration(700);
+    animationc2->setDuration(700);
+    animation1u->setDuration(700);
+    animation1s->setDuration(700);
+    animation2u->setDuration(700);
+    animation2s->setDuration(700);
+    animation->start();
+    animationw->start();
+    animationc->start();
+    animationc2->start();
+    animation1u->start();
+    animation1s->start();
+    animation2u->start();
+    animation2s->start();
+    connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_back_to_main()));
+}
 
 
-
-
+void game::slo_back_to_main()
+{
+    Sleep(5000);
+    this->close();
+    par->show();
+}
 
 
 
@@ -896,45 +1013,7 @@ void game::game_server_start()
 
 void game::game_client_start()
 {
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

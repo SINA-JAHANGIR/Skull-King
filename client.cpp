@@ -11,6 +11,7 @@ client::client(QWidget *parent) :
     ui(new Ui::client)
 {
     ui->setupUi(this);
+    par = parent;
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
@@ -22,7 +23,7 @@ client::client(QWidget *parent) :
 
     connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
 
-    game_client_page = new game(this);
+    game_client_page = new game(par);
     connect(game_client_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
     connect(game_client_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
     thread = std::thread(&client::slo_read_card,this);

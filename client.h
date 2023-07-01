@@ -48,7 +48,7 @@ private:
     game *game_client_page;
     std::thread thread;
     QSignalSpy* spy;
-
+    QWidget *par;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

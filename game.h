@@ -13,7 +13,7 @@
 #include "card.h"
 #include "player.h"
 
-enum status {p1,p2};
+enum status {p1,p2,equal};
 
 namespace Ui {
 class game;
@@ -43,6 +43,7 @@ private slots:
     void slo_compare_two_cards();
     void slo_hide_forecast_btn();
     void slo_rate_round();
+    void slo_back_to_main();
     void on_btn_change_clicked();
 signals:
     void sig_send_card();
@@ -64,6 +65,9 @@ private:
     customized_button* forecast_p2_btn = nullptr;
     status turn = p1;
     status hand_winner;
+    status winner;
+    QLabel* lbl_username_p1;
+    QLabel* lbl_username_p2;
     QLabel* lbl_score_p1;
     QLabel* lbl_score_p2;
     int r = 0;
@@ -71,6 +75,7 @@ private:
     bool wait = true;
     QEventLoop loop;
     QEventLoop start;
+    QWidget *par;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);
@@ -86,6 +91,7 @@ private:
     void inactive_num_click();
     void inactive_card_click();
     void hand_win();
+    void game_win();
     void change_card();
     friend class client;
     friend class server;
