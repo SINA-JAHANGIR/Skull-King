@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <thread>
+#include <QThread>
 #include <QSignalSpy>
 
 
@@ -36,6 +37,8 @@ public slots:
     void slo_change_request();
     void slo_send_forecast();
     void slo_end_of_round();
+
+    void slo_finish_animation();
 
 private slots:
     void on_btn_start_clicked();

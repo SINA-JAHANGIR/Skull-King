@@ -31,6 +31,8 @@ public slots:
     void slo_change_card();
     void slo_send_forecast();
     void slo_call_dealer_animation();
+    void slo_finish_animation();
+    void slo_change_request();
 
 private slots:
     void on_btn_start_clicked();
@@ -40,6 +42,7 @@ signals:
     void sig_game_continue();
     void sig_start();
     void sig_get_forecast();
+    void sig_change_request();
 
 
 private:
@@ -48,6 +51,7 @@ private:
     game *game_client_page;
     std::thread thread;
     QSignalSpy* spy;
+    QThread *qth;
 
     // Functions :
     QByteArray card_to_qbytearray(const card&);

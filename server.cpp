@@ -3,6 +3,7 @@
 #include <windows.h>
 
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
+const int w = 100 , a = (600/400) , h = a*w;
 
 server::server(QWidget *parent) :
     QMainWindow(parent),
@@ -18,7 +19,8 @@ server::server(QWidget *parent) :
     connect(game_server_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
     connect(this,SIGNAL(sig_change_request()),this,SLOT(slo_change_request()));
     connect(game_server_page,SIGNAL(sig_send_forecast()),this,SLOT(slo_send_forecast()));
-    connect(this,SIGNAL(sig_game_continue()),&game_server_page->loop,SLOT(quit()));
+//    connect(this,SIGNAL(sig_game_continue()),&game_server_page->loop,SLOT(quit()));
+    connect(this,SIGNAL(sig_game_continue()),game_server_page,SLOT(slo_selected_p2_card_btn()));
     connect(game_server_page,SIGNAL(sig_end_of_round()),this,SLOT(slo_end_of_round()));
     connect(this,SIGNAL(sig_get_forecast()),&game_server_page->start,SLOT(quit()));
 }
@@ -84,18 +86,37 @@ void server::change_card()
     QString t = "change";
     client_socket->write(t.toStdString().c_str());
     client_socket->waitForBytesWritten(-1);
-    spy->wait(-1);
-//    QByteArray temp2 = client_socket->readAll();
+    client_socket->waitForReadyRead(-1);
+    QByteArray temp2 = client_socket->readAll();
     QString card_num = QString::number(n);
     client_socket->write(card_num.toStdString().c_str());
     client_socket->waitForBytesWritten(-1);
-    spy->wait(-1);
-//    temp2 = client_socket->readAll();
+    client_socket->waitForReadyRead(-1);
+    temp2 = client_socket->readAll();
     card_num = QString::number(m);
     client_socket->write(card_num.toStdString().c_str());
     client_socket->waitForBytesWritten(-1);
-    spy->wait(-1);
-//    temp2 = client_socket->readAll();
+    client_socket->waitForReadyRead(-1);
+    temp2 = client_socket->readAll();
+
+    game_server_page->clear_move_animations();
+    QPropertyAnimation *animation = new QPropertyAnimation(bp2,"geometry");
+    animation->setDuration(700);
+    QRect temp = bp2->geometry();
+    animation->setStartValue(temp);
+    animation->setEndValue(QRect((game_server_page->width()/2-w/2), game_server_page->height()-h-90, w, h));
+    game_server_page->all_move_animation.append(animation);
+    animation->start();
+
+    QPropertyAnimation *animation2 = new QPropertyAnimation(bp1,"geometry");
+    animation2->setDuration(700);
+    QRect temp3 = bp1->geometry();
+    animation2->setStartValue(temp3);
+    animation2->setEndValue(QRect((game_server_page->width()/2-w/2), 60, w, h));
+    game_server_page->all_move_animation.append(animation2);
+    animation2->start();
+
+    connect(animation2,SIGNAL(finished()),this,SLOT(slo_finish_animation()));
 }
 
 void server::on_btn_start_clicked()
@@ -139,10 +160,6 @@ void server::slo_read_card()
             }
             else if(received == "change_request")
             {
-                QString t ="ok";
-                client_socket->write(t.toStdString().c_str());
-                client_socket->waitForBytesWritten(-1);
-                received.clear();
                 emit sig_change_request();
             }
             else if(received == "ready")
@@ -223,6 +240,15 @@ void server::slo_read_card()
                 client_socket->waitForReadyRead(-1);
                 QByteArray temp2 = client_socket->readAll();
             }
+            else if(received == "reject")
+            {
+                QMessageBox::information(game_server_page,"Change","Player2 rejected your request");
+            }
+            else if(received == "accept")
+            {
+                game_server_page->inactive_card_click();
+                change_card();
+            }
 //        }
 //    }
 }
@@ -236,7 +262,7 @@ void server::slo_change_card()
 
 void server::slo_change_request()
 {
-    QMessageBox msbox;
+    QMessageBox msbox(game_server_page);
     QPushButton *accept = msbox.addButton(tr("Accept"),QMessageBox::ActionRole);
     QPushButton *reject = msbox.addButton(tr("Reject"),QMessageBox::ActionRole);
 
@@ -244,6 +270,7 @@ void server::slo_change_request()
     if(msbox.clickedButton() == accept)
     {
         //accept
+        game_server_page->inactive_card_click();
         change_card();
         msbox.close();
     }
@@ -267,4 +294,18 @@ void server::slo_send_forecast()
 void server::slo_end_of_round()
 {
     game_server_page->make_card(game_server_page->r);
+}
+
+void server::slo_finish_animation()
+{
+    game_server_page->sort_btn_cards(game_server_page->player1.cards);
+    game_server_page->rasie_p1_cards();
+    game_server_page->slo_p1_arrange_card();
+    game_server_page->sort_btn_cards(game_server_page->player2.cards);
+    game_server_page->rasie_p2_cards();
+    game_server_page->slo_p2_arrange_card();
+    if(game_server_page->turn == p1)
+    {
+        game_server_page->slo_active_card_click();
+    }
 }

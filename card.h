@@ -30,6 +30,7 @@ public:
     const int get_number() const;
     QString get_type_string();
     void change_StyleSheet();
+
 signals:
 
 };
