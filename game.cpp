@@ -202,6 +202,15 @@ void game::make_card(int n)
         all_cards_btn[index[1]]->setStyleSheet(BACK);
         all_cards_btn[index[1]]->setParent(ui->centralwidget);
         all_cards_btn[index[1]]->show();
+
+        if(player1.cards[0]->get_btn_card() > player2.cards[0]->get_btn_card() )
+        {
+            turn = p1;
+        }
+        else
+        {
+            turn = p2;
+        }
         delete[] index;
     }
     else
@@ -296,11 +305,11 @@ void game::dealer_animation()
         all_move_animation.append(player2_animation);
         player2_animation->start();
     }
-    if (r == 0)
+    if (r == 0 && turn == p1)
     {
         connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_active_card_click()));
     }
-    else
+    else if(r > 0)
     {
         connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_arrange_card()));
     }
@@ -474,40 +483,66 @@ void game::slo_selected_num_btn(int number)
     {
         connect(animation2,SIGNAL(finished()),this,SLOT(slo_active_card_click()));
     }
-    else
-    {
-        connect(animation2,SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
-    }
+//    else
+//    {
+//        connect(animation2,SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
+//    }
 }
 
 
 void game::slo_active_card_click()
 {
-    int s = player1.cards.size();
-    for (int i = 0 ; i < s ; i++)
+    if(turn == p1 )
     {
-        player1.cards[i]->setEnabled(true);
+        int s = player1.cards.size();
+        for (int i = 0 ; i < s ; i++)
+        {
+            player1.cards[i]->setEnabled(true);
+        }
     }
-//    if(turn = p1)
-//    {
-//        int s = player1.cards.size();
-//        for (int i = 0 ; i < s ; i++)
-//        {
-//            player1.cards[i]->setEnabled(true);
-//        }
-//    }
-//    else
-//    {
-//        int counter = 0;
-//        for(int i=0 ; i < player1.cards.size() ; i++)
-//        {
-//            if( player1.cards[i]->get_btn_card().get_get_type_string() == player2.get_selected_card_btn()->get_btn_card().get_type_string() )
-//            {
-//                counter++;
-//            }
-//        }
+    else
+    {
+        QString type_card_p2 = player2.get_selected_card_btn()->get_btn_card().get_type_string();
+        int counter = 0;
+        for(int i=0 ; i < player1.cards.size() ; i++)
+        {
+            if( player1.cards[i]->get_btn_card().get_type_string() == type_card_p2 )
+            {
+                counter++;
+            }
+        }
+        if(counter == 0 || type_card_p2 == "king" || type_card_p2 == "queen" || type_card_p2 == "pirate")
+        {
+            int s = player1.cards.size();
+            for (int i = 0 ; i < s ; i++)
+            {
+                player1.cards[i]->setEnabled(true);
+            }
+        }
+        else
+        {
+            for(int i=0 ; i < player1.cards.size() ; i++)
+            {
+                if( player1.cards[i]->get_btn_card().get_type_string() == type_card_p2 )
+                {
+                    player1.cards[i]->setEnabled(true);
+                }
+                else if( player1.cards[i]->get_btn_card().get_type_string() == "king" )
+                {
+                    player1.cards[i]->setEnabled(true);
+                }
+                else if( player1.cards[i]->get_btn_card().get_type_string() == "queen" )
+                {
+                    player1.cards[i]->setEnabled(true);
+                }
+                else if( player1.cards[i]->get_btn_card().get_type_string() == "pirate" )
+                {
+                    player1.cards[i]->setEnabled(true);
+                }
+            }
+        }
 
-//    }
+    }
 
 }
 
@@ -536,12 +571,17 @@ void game::slo_selected_p1_card_btn(customized_button* input)
     all_move_animation.append(animation);
     animation->start();
     slo_p1_arrange_card();
-    if (turn == p1 || r == 0)
+//    if (turn == p1 || r == 0)
+//    {
+//        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
+//    }
+//    else
+//    {
+//    connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_compare_two_cards()));
+//    }
+    if(turn == p2)
     {
-        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
-    }
-    else
-    {
+
         connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_compare_two_cards()));
     }
     emit sig_send_one_card(input->get_btn_card());
@@ -550,10 +590,10 @@ void game::slo_selected_p1_card_btn(customized_button* input)
 
 void game::slo_selected_p2_card_btn()
 {
-    if (player2.get_selected_card_btn() == nullptr)
-    {
-        loop.exec();
-    }
+//    if (player2.get_selected_card_btn() == nullptr)
+//    {
+//        loop.exec();
+//    }
     iter it = player2.find_card(player2.get_selected_card_btn());
     player2.cards.erase(it);
     clear_move_animations();
@@ -579,10 +619,10 @@ void game::slo_selected_p2_card_btn()
 
 void game::slo_compare_two_cards()
 {
-    if (player2.get_selected_card_btn() == nullptr)
-    {
-        loop.exec();
-    }
+//    if (player2.get_selected_card_btn() == nullptr)
+//    {
+//        loop.exec();
+//    }
     if (turn == p1)
     {
         if (player1.get_selected_card_btn()->get_btn_card()>player2.get_selected_card_btn()->get_btn_card() == true)
@@ -686,8 +726,8 @@ void game::hand_win()
     {
         if (turn == p1)
             connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_active_card_click()));
-        else
-            connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
+//        else
+//            connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
     }
     else
     {
@@ -872,6 +912,8 @@ void game::slo_rate_round()
             player1.clear_win_cards();
             player2.clear_cards();
             player2.clear_win_cards();
+            player1.set_forecast_number(-1);
+            player2.set_forecast_number(-1);
             emit sig_end_of_round();
         }
         else
@@ -1019,5 +1061,16 @@ void game::game_client_start()
 
 void game::on_btn_change_clicked()
 {
-    emit sig_change_card();
+    if(player1.get_forecast_number() == -1 || player2.get_forecast_number() == -1)
+    {
+        QMessageBox::information(this,"Change","Please wait");
+    }
+    else if(player1.get_selected_card_btn() != nullptr || player2.get_selected_card_btn() != nullptr)
+    {
+        QMessageBox::information(this,"Change","The other player has choose a card. please wait");
+    }
+    else if(r > 0 && r < 8)
+    {
+       emit sig_change_card();
+    }
 }
