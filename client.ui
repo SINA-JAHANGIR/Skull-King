@@ -14,22 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="btn_start">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>51</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="lbl_background">
     <property name="geometry">
      <rect>
@@ -221,17 +205,6 @@
      <string>Connect</string>
     </property>
    </widget>
-   <zorder>lbl_background</zorder>
-   <zorder>btn_start</zorder>
-   <zorder>lbl_king</zorder>
-   <zorder>lbl_pirate</zorder>
-   <zorder>line_ip</zorder>
-   <zorder>lbl_ip</zorder>
-   <zorder>label</zorder>
-   <zorder>label_2</zorder>
-   <zorder>label_3</zorder>
-   <zorder>label_4</zorder>
-   <zorder>pushButton</zorder>
   </widget>
  </widget>
  <resources/>

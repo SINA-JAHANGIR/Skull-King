@@ -19,6 +19,7 @@ server::server(QWidget *parent) :
     move(x, y - 30);
     game_server = new QTcpServer();
     game_server->listen(QHostAddress::Any,1225);
+    game_server->setMaxPendingConnections(1);
     connect(game_server,SIGNAL(newConnection()),this,SLOT(connection_new()));
     game_server_page = new game(par);
     connect(game_server_page,SIGNAL(sig_send_card()),this,SLOT(slo_send_card()));
@@ -30,6 +31,14 @@ server::server(QWidget *parent) :
     connect(this,SIGNAL(sig_game_continue()),game_server_page,SLOT(slo_selected_p2_card_btn()));
     connect(game_server_page,SIGNAL(sig_end_of_round()),this,SLOT(slo_end_of_round()));
     connect(this,SIGNAL(sig_get_forecast()),&game_server_page->start,SLOT(quit()));
+
+    connect(game_server_page,SIGNAL(sig_stop()),this,SLOT(slo_stop()));
+    connect(game_server_page,SIGNAL(sig_resume()),this,SLOT(slo_resume()));
+    connect(this,SIGNAL(sig_stop()),game_server_page,SLOT(slo_stop()));
+    connect(this,SIGNAL(sig_resume()),game_server_page,SLOT(slo_resume()));
+
+    connect(game_server_page,SIGNAL(sig_exit()),this,SLOT(slo_exit()));
+    connect(this,SIGNAL(sig_exit()),game_server_page,SLOT(slo_exit()));
 }
 
 server::~server()
@@ -39,12 +48,27 @@ server::~server()
 }
 
 void server::connection_new(){
-    client_socket = game_server->nextPendingConnection();
-    connect(client_socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
-    //this->ui->btn_start->setEnabled(true);
-    thread = std::thread(&server::slo_read_card,this);
-    spy = new QSignalSpy(this,SIGNAL(sig_continue()));
-    ready = true;
+
+    if(num_player < 2)
+    {
+        num_player++;
+        client_socket = game_server->nextPendingConnection();
+        connect(client_socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
+        this->ui->btn_start->setEnabled(true);
+        ui->label->setText(client_socket->localAddress().toString() + " Connected");
+        thread = std::thread(&server::slo_read_card,this);
+        spy = new QSignalSpy(this,SIGNAL(sig_continue()));
+        ready = true;
+    }
+    else
+    {
+        QTcpSocket *client = new QTcpSocket();
+        client = game_server->nextPendingConnection();
+        client->write("Server is full.");
+        client->waitForBytesWritten(1000);
+        client->close();
+        client->deleteLater();
+    }
 }
 
 
@@ -256,6 +280,18 @@ void server::slo_read_card()
                 game_server_page->inactive_card_click();
                 change_card();
             }
+            else if(received == "Stop")
+            {
+                emit sig_stop();
+            }
+            else if(received == "Resume")
+            {
+                emit sig_resume();
+            }
+            else if(received == "Exit")
+            {
+                emit sig_exit();
+            }
 //        }
 //    }
 }
@@ -315,4 +351,25 @@ void server::slo_finish_animation()
     {
         game_server_page->slo_active_card_click();
     }
+}
+
+void server::slo_stop()
+{
+    QString temp = "Stop";
+    client_socket->write(temp.toStdString().c_str());
+    client_socket->waitForBytesWritten(-1);
+}
+
+void server::slo_resume()
+{
+    QString temp = "Resume";
+    client_socket->write(temp.toStdString().c_str());
+    client_socket->waitForBytesWritten(-1);
+}
+
+void server::slo_exit()
+{
+    QString temp = "Exit";
+    client_socket->write(temp.toStdString().c_str());
+    client_socket->waitForBytesWritten(-1);
 }

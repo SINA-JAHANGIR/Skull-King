@@ -37,8 +37,10 @@ public slots:
     void slo_change_request();
     void slo_send_forecast();
     void slo_end_of_round();
-
     void slo_finish_animation();
+    void slo_stop();
+    void slo_resume();
+    void slo_exit();
 
 private slots:
     void on_btn_start_clicked();
@@ -48,6 +50,9 @@ signals:
     void sig_change_request();
     void sig_game_continue();
     void sig_get_forecast();
+    void sig_stop();
+    void sig_resume();
+    void sig_exit();
 
 private:
     Ui::server *ui;
@@ -58,6 +63,7 @@ private:
     std::thread thread;
     QSignalSpy* spy;
     QWidget *par;
+    int num_player = 1 ;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

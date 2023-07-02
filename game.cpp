@@ -18,16 +18,26 @@ game::game(QWidget *parent) :
 {
     ui->setupUi(this);
     par = parent;
+    stop_spy = new QSignalSpy(this,SIGNAL(sig_timeout()));
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
     const int y = (screenGeometry.height() - height()) / 2;
     move(x, y);
     set_all_cards();
+    timer = new QTimer(this);
+    timer2 = new QTimer(this);
+    seconds_counter = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(slo_time_warning()));
+
+    connect(seconds_counter,SIGNAL(timeout()),this ,SLOT(slo_countdown()));
 }
 
 game::~game()
 {
+    delete timer;
+//    delete timer2;
+    delete stop_spy;
     delete ui;
 }
 
@@ -483,15 +493,12 @@ void game::slo_selected_num_btn(int number)
     {
         connect(animation2,SIGNAL(finished()),this,SLOT(slo_active_card_click()));
     }
-//    else
-//    {
-//        connect(animation2,SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
-//    }
 }
 
 
 void game::slo_active_card_click()
 {
+    timer->start(10000);
     if(turn == p1 )
     {
         int s = player1.cards.size();
@@ -548,6 +555,16 @@ void game::slo_active_card_click()
 
 void game::inactive_card_click()
 {
+    timer->stop();
+    seconds_counter->stop();
+    if(timerCountdown < 10)
+    {
+        timerCountdown = 10;
+        lbl_seconds_counter->hide();
+        lbl_text_dialog->hide();
+        delete lbl_seconds_counter;
+        delete lbl_text_dialog;
+    }
     int s = player1.cards.size();
     for (int i = 0 ; i < s ; i++)
     {
@@ -557,6 +574,16 @@ void game::inactive_card_click()
 
 void game::slo_selected_p1_card_btn(customized_button* input)
 {
+    timer->stop();
+    seconds_counter->stop();
+    if(timerCountdown < 10)
+    {
+        timerCountdown = 10;
+        lbl_seconds_counter->hide();
+        lbl_text_dialog->hide();
+        delete lbl_seconds_counter;
+        delete lbl_text_dialog;
+    }
     inactive_card_click();
     input->get_btn_card().set_selected(true);
     player1.set_selected_card_btn(input);
@@ -571,14 +598,6 @@ void game::slo_selected_p1_card_btn(customized_button* input)
     all_move_animation.append(animation);
     animation->start();
     slo_p1_arrange_card();
-//    if (turn == p1 || r == 0)
-//    {
-//        connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
-//    }
-//    else
-//    {
-//    connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_compare_two_cards()));
-//    }
     if(turn == p2)
     {
 
@@ -590,10 +609,6 @@ void game::slo_selected_p1_card_btn(customized_button* input)
 
 void game::slo_selected_p2_card_btn()
 {
-//    if (player2.get_selected_card_btn() == nullptr)
-//    {
-//        loop.exec();
-//    }
     iter it = player2.find_card(player2.get_selected_card_btn());
     player2.cards.erase(it);
     clear_move_animations();
@@ -619,10 +634,6 @@ void game::slo_selected_p2_card_btn()
 
 void game::slo_compare_two_cards()
 {
-//    if (player2.get_selected_card_btn() == nullptr)
-//    {
-//        loop.exec();
-//    }
     if (turn == p1)
     {
         if (player1.get_selected_card_btn()->get_btn_card()>player2.get_selected_card_btn()->get_btn_card() == true)
@@ -726,8 +737,6 @@ void game::hand_win()
     {
         if (turn == p1)
             connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_active_card_click()));
-//        else
-//            connect(all_move_animation[all_move_animation.size()-1],SIGNAL(finished()),this,SLOT(slo_selected_p2_card_btn()));
     }
     else
     {
@@ -966,7 +975,7 @@ void game::game_win()
     animation1s->setStartValue(temp1s);
     animation2u->setStartValue(temp2u);
     animation2s->setStartValue(temp2s);
-    if (player1.score > player2.score)
+    if ((player1.score > player2.score) || p2_exit == true)
     {
         winner = p1;
         lbl_win->setText("YOU WIN !");
@@ -1074,3 +1083,147 @@ void game::on_btn_change_clicked()
        emit sig_change_card();
     }
 }
+
+void game::on_btn_stop_clicked()
+{
+    if(stop == false && n_stopped < 2)
+    {
+       stop = true;
+       n_stopped++;
+       ui->btn_stop->setText("Resume");
+       emit sig_stop();
+
+       ui->btn_change->setEnabled(false);
+       ui->btn_exit->setEnabled(false);
+       inactive_card_click();
+       stop_spy->wait(10000);
+
+       if(stop == true)
+       {
+        stop = false;
+        ui->btn_stop->setText("Stop");
+        emit sig_resume();
+
+        ui->btn_change->setEnabled(true);
+        ui->btn_exit->setEnabled(true);
+        if((turn == p1 && player1.get_selected_card_btn() == nullptr) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
+        {
+            slo_active_card_click();
+        }
+       }
+    }
+    else if(stop == true)
+    {
+       stop = false;
+       ui->btn_stop->setText("Stop");
+       emit sig_resume();
+       emit sig_timeout();
+
+       ui->btn_change->setEnabled(true);
+       ui->btn_exit->setEnabled(true);
+       if((turn == p1 && player1.get_selected_card_btn() == nullptr) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
+       {
+            slo_active_card_click();
+       }
+    }
+    else if(stop == false && n_stopped >= 2)
+    {
+       QMessageBox::information(this,"Stop","You cannot stop the game anymore.");
+    }
+}
+void game::on_btn_exit_clicked()
+{
+    QMessageBox msbox(this);
+    msbox.setText("Are you sure you want to exit ?");
+    QPushButton *cancel = msbox.addButton(tr("Cancel"),QMessageBox::ActionRole);
+    QPushButton *exit = msbox.addButton(tr("Exit"),QMessageBox::ActionRole);
+    msbox.exec();
+    if(msbox.clickedButton() == cancel)
+    {
+       msbox.close();
+    }
+    else if(msbox.clickedButton() == exit)
+    {
+       emit sig_exit();
+       msbox.close();
+       Sleep(800);
+       this->close();
+       par->show();
+    }
+}
+
+void game::slo_stop()
+{
+    ui->btn_change->setEnabled(false);
+    ui->btn_exit->setEnabled(false);
+    ui->btn_stop->setEnabled(false);
+    inactive_card_click();
+}
+void game::slo_resume()
+{
+    ui->btn_change->setEnabled(true);
+    ui->btn_exit->setEnabled(true);
+    ui->btn_stop->setEnabled(true);
+    if((turn == p1 && player1.get_selected_card_btn() == nullptr) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
+    {
+       slo_active_card_click();
+    }
+}
+
+void game::slo_exit()
+{
+    player1.hide_cards();
+    player1.hide_win_cards();
+    player2.hide_cards();
+    player2.hide_win_cards();
+    p2_exit = true;
+    QMessageBox::information(this,"Exit","Player 2 left the game");
+    game_win();
+}
+
+void game::slo_time_warning()
+{
+    lbl_seconds_counter = new QLabel(this);
+    lbl_seconds_counter->setGeometry(QRect(width()/2-50,height()/2-30,100,100));
+    lbl_seconds_counter->setText(QString::number(timerCountdown));
+
+    lbl_text_dialog = new QLabel(this);
+    lbl_text_dialog->setGeometry(QRect(width()/2-200,height()/2-100,400,100));
+    lbl_text_dialog->setText("You must choose a card");
+
+    QFont font = lbl_text_dialog->font();
+    font.setPointSize(20);
+    font.setBold(true);
+    font.setFamily("Tempus Sans ITC");
+    lbl_seconds_counter->setFont(font);
+    lbl_seconds_counter->setAlignment(Qt::AlignCenter);
+    lbl_seconds_counter->setParent(this);
+    lbl_seconds_counter->setStyleSheet("QLabel {color: red;}");
+    lbl_seconds_counter->show();
+    lbl_text_dialog->setFont(font);
+    lbl_text_dialog->setAlignment(Qt::AlignCenter);
+    lbl_text_dialog->setParent(this);
+    lbl_text_dialog->setStyleSheet("QLabel {color: red;}");
+    lbl_text_dialog->show();
+
+    seconds_counter->start(1000);
+}
+
+void game::slo_countdown()
+{
+    timerCountdown--;
+    lbl_seconds_counter->setText(QString::number(timerCountdown));
+    if (timerCountdown == 1) {
+       int s = player1.cards.size();
+       for (int j = 0 ; j < s ; j++)
+       {
+            if(player1.cards[j]->isEnabled() == true)
+            {
+            emit player1.cards[j]->clicked(true);
+            break;
+            }
+       }
+    }
+}
+
+
