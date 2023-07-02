@@ -2,11 +2,12 @@
 #include "ui_start.h"
 #include <QScreen>
 
-start::start(QWidget *parent) :
+start::start(person per1,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::start)
 {
     ui->setupUi(this);
+    p1 = per1;
     par = parent;
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
@@ -22,8 +23,8 @@ start::~start()
 
 void start::on_btn_host_clicked()
 {
-    host = new server(par);
-    this->hide();
+    host = new server(p1,par);
+    this->close();
     host->setWindowTitle("Skull King");
     host->show();
 }
@@ -31,8 +32,8 @@ void start::on_btn_host_clicked()
 
 void start::on_btn_join_clicked()
 {
-    join = new client(par);
-    this->hide();
+    join = new client(p1,par);
+    this->close();
     join->setWindowTitle("Skull King");
     join->show();
 }

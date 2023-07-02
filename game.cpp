@@ -12,12 +12,15 @@ using namespace std;
 const int w = 100 , a = (600/400) , h = a*w;
 //
 
-game::game(QWidget *parent) :
+game::game(person per1,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::game)
 {
     ui->setupUi(this);
     par = parent;
+    person1 = per1;
+    update_file();
+    player1.set_username(person1.get_username());
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
@@ -34,10 +37,6 @@ game::~game()
 
 void game::set_all_cards()
 {
-    /*//////////////////////////////////////////////////////////////////////////////////////////*/
-    player1.set_username("SINA-JAHANGIR");
-    player2.set_username("MEHDI-VAKILI");
-    /*//////////////////////////////////////////////////////////////////////////////////////////*/
     lbl_score_p1 = new QLabel(this);
     lbl_score_p2 = new QLabel(this);
     lbl_score_p1->setGeometry(QRect(width()/2-150,height()-270,300,35));
@@ -926,6 +925,7 @@ void game::slo_rate_round()
 
 void game::game_win()
 {
+    ui->btn_change->hide();
     QLabel* lbl_logo = new QLabel(this);
     lbl_logo = new QLabel(this);
     lbl_logo->setParent(ui->centralwidget);
@@ -969,6 +969,8 @@ void game::game_win()
     if (player1.score > player2.score)
     {
         winner = p1;
+        person1.set_coin(person1.get_coin()+100);
+        update_file();
         lbl_win->setText("YOU WIN !");
         lbl_win->setStyleSheet("QLabel {color: green;}");
         animation1u->setEndValue(QRect(width()/2-500,450,600,70));
@@ -989,6 +991,8 @@ void game::game_win()
     else
     {
         winner = status::equal;
+        person1.set_coin(person1.get_coin()+50);
+        update_file();
         lbl_win->setText("Draw !");
         lbl_win->setStyleSheet("QLabel {color: yellow;}");
         animation1u->setEndValue(QRect(width()/2-500,450,600,70));
@@ -996,6 +1000,7 @@ void game::game_win()
         animation2u->setEndValue(QRect(width()/2-500,500,600,70));
         animation2s->setEndValue(QRect(width()/2-100,500,600,70));
     }
+    update_history();
     lbl_win->show();
     lbl_coin->show();
     lbl_coin2->show();
@@ -1032,6 +1037,195 @@ void game::game_win()
 }
 
 
+void game::update_file()
+{
+    QFile file("account.txt");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+        exit(13);
+    }
+    else
+    {
+        QTextStream in(&file);
+        QString username , password , name , phone , email , temp;
+        int coin;
+        while(!in.atEnd())
+        {
+            in >> username >>
+                password >>
+                name >>
+                phone >>
+                email >>
+                coin >>
+                temp;
+            if (username == person1.get_username())
+            {
+                continue;
+            }
+            if (username == "" || password == "" || name == "" || phone == "" || email == "")
+            {
+                break;
+            }
+            person temp ;
+            temp.set_username(username);
+            temp.set_password(password);
+            temp.set_name(name);
+            temp.set_phone(phone);
+            temp.set_email(email);
+            temp.set_coin(coin);
+            people.append(temp);
+        }
+    }
+    file.close();
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+        exit(13);
+    }
+    else
+    {
+        QTextStream out(&file);
+        for (int i = 0 ; i < people.size() ; i++)
+        {
+            out << people[i].get_username() << '\n'
+                << people[i].get_password() << '\n'
+                << people[i].get_name() << '\n'
+                << people[i].get_phone() << '\n'
+                << people[i].get_email() << '\n'
+                << people[i].get_coin() << '\n'
+                << "----------------------------------------------------" << '\n';
+        }
+    }
+    file.close();
+    people.clear();
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+        exit(13);
+    }
+    else
+    {
+        QTextStream out(&file);
+        out << person1.get_username() << '\n'
+            << person1.get_password() << '\n'
+            << person1.get_name() << '\n'
+            << person1.get_phone() << '\n'
+            << person1.get_email() << '\n'
+            << person1.get_coin() << '\n'
+            << "----------------------------------------------------" << '\n';
+
+    }
+    file.close();
+    QFile gamer_file("gamer.txt");
+    if(!gamer_file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+        exit(13);
+    }
+    else
+    {
+        QTextStream outg(&gamer_file);
+        outg << person1.get_username() << '\n' <<
+            person1.get_password() << '\n' <<
+            person1.get_name() << '\n' <<
+            person1.get_phone() << '\n' <<
+            person1.get_email() << '\n' <<
+            person1.get_coin() ;
+    }
+}
+
+
+void game::update_history()
+{
+    int win_number = 0 , lose_number = 0 , draw_number = 0 ;
+    QString p2_username_1 = "----------", p2_username_2 = "----------", p2_username_3 = "----------",
+        win_lose1 = "-----", win_lose2 = "-----" , win_lose3 = "-----";
+    int p1_card_1 = 100 , p1_card_2 = 100 , p1_card_3 = 100 , p2_card_1 = 100 , p2_card_2 = 100 , p2_card_3 = 100 ;
+    QFile history_file(person1.get_username()+".txt");
+    if(history_file.exists())
+    {
+        if(!history_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+            exit(13);
+        }
+        else
+        {
+            QTextStream in(&history_file);
+            in >> win_number >>
+                lose_number >>
+                draw_number >>
+                p2_username_1 >>
+                win_lose1 >>
+                p1_card_1 >>
+                p2_card_1
+                >> p2_username_2 >>
+                    win_lose2 >>
+                    p1_card_2 >>
+                    p2_card_2
+                >>p2_username_3 >>
+                    win_lose3 >>
+                    p1_card_3 >>
+                    p2_card_3 ;
+        }
+        history_file.close();
+    }
+    p2_username_3 = p2_username_2;
+    p2_username_2 = p2_username_1;
+    p2_username_1 = player2.get_username();
+    win_lose3 = win_lose2;
+    win_lose2 = win_lose1;
+    switch(winner)
+    {
+    case p1:
+        win_lose1 = "Win";
+        win_number++;
+        break;
+    case p2:
+        win_lose1 = "Lose";
+        lose_number++;
+        break;
+    case status::equal:
+        win_lose1 = "Draw";
+        draw_number++;
+        break;
+    }
+    int s = player1.win_cards.size();
+    p1_card_3 = p1_card_2;
+    p1_card_2 = p1_card_1;
+    p1_card_1 = player1.win_cards[s-2]->get_btn_card().get_number();
+    p2_card_3 = p2_card_2;
+    p2_card_2 = p2_card_1;
+    p2_card_1 = player1.win_cards[s-1]->get_btn_card().get_number();
+    if(!history_file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+        exit(13);
+    }
+    else
+    {
+        QTextStream out(&history_file);
+        out << win_number << '\n' <<
+            lose_number << '\n' <<
+            draw_number << '\n' <<
+            p2_username_1 << '\n' <<
+            win_lose1 << '\n' <<
+            p1_card_1 << '\n' <<
+            p2_card_1
+            << '\n' << p2_username_2 << '\n' <<
+            win_lose2 << '\n' <<
+            p1_card_2 << '\n' <<
+            p2_card_2
+            << '\n' << p2_username_3 << '\n' <<
+            win_lose3 << '\n' <<
+            p1_card_3 << '\n' <<
+            p2_card_3 ;
+    }
+    history_file.close();
+}
+
+
 void game::slo_back_to_main()
 {
     Sleep(5000);
@@ -1040,12 +1234,21 @@ void game::slo_back_to_main()
 }
 
 
-
-
-
-
-
-
+void game::on_btn_change_clicked()
+{
+    if(player1.get_forecast_number() == -1 || player2.get_forecast_number() == -1)
+    {
+        QMessageBox::information(this,"Skull King","You can't now ! Please try again after you and other player have selected your forecast number");
+    }
+    else if(player1.get_selected_card_btn() != nullptr || player2.get_selected_card_btn() != nullptr)
+    {
+        QMessageBox::information(this,"Skull King","A player has selected a card ! please wait .");
+    }
+    else if(r > 0 && r < 8)
+    {
+        emit sig_change_card();
+    }
+}
 
 
 void game::game_server_start()
@@ -1059,18 +1262,3 @@ void game::game_client_start()
 
 
 
-void game::on_btn_change_clicked()
-{
-    if(player1.get_forecast_number() == -1 || player2.get_forecast_number() == -1)
-    {
-        QMessageBox::information(this,"Change","Please wait");
-    }
-    else if(player1.get_selected_card_btn() != nullptr || player2.get_selected_card_btn() != nullptr)
-    {
-        QMessageBox::information(this,"Change","The other player has choose a card. please wait");
-    }
-    else if(r > 0 && r < 8)
-    {
-       emit sig_change_card();
-    }
-}

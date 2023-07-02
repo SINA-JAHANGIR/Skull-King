@@ -4,11 +4,12 @@
 #include "setting.h"
 #include "history.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(person per1,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    p1 = per1;
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
@@ -24,7 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btn_play_clicked()
 {
-    start_page = new start(this);
+    start_page = new start(p1,this);
     this->hide();
     start_page->setWindowTitle("Skull King");
     start_page->show();
@@ -32,7 +33,7 @@ void MainWindow::on_btn_play_clicked()
 
 void MainWindow::on_btn_setting_clicked()
 {
-    setting* setting_page = new setting(this);
+    setting* setting_page = new setting(p1,this);
     setting_page->setWindowTitle("Skull King");
     this->hide();
     setting_page->show();
@@ -40,7 +41,7 @@ void MainWindow::on_btn_setting_clicked()
 
 void MainWindow::on_btn_history_clicked()
 {
-    history* history_page = new history(this);
+    history* history_page = new history(p1,this);
     history_page->setWindowTitle("Skull King");
     this->hide();
     history_page->show();

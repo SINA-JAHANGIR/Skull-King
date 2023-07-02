@@ -12,6 +12,7 @@
 #include "customized_button.h"
 #include "card.h"
 #include "player.h"
+#include "person.h"
 
 enum status {p1,p2,equal};
 
@@ -24,7 +25,7 @@ class game : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit game(QWidget *parent = nullptr);
+    explicit game(person,QWidget *parent = nullptr);
     ~game();
     // Functions :
     void game_server_start();
@@ -76,6 +77,9 @@ private:
     QEventLoop loop;
     QEventLoop start;
     QWidget *par;
+    person person1;
+    QVector<person> people;
+    QString last_cards_p1 , last_cards_p2;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);
@@ -93,6 +97,8 @@ private:
     void hand_win();
     void game_win();
     void change_card();
+    void update_file();
+    void update_history();
     friend class client;
     friend class server;
 };

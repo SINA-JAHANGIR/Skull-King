@@ -6,12 +6,13 @@
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 const int w = 100 , a = (600/400) , h = a*w;
 
-server::server(QWidget *parent) :
+server::server(person per1,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::server)
 {
     ui->setupUi(this);
     par = parent;
+    person1 = per1;
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
@@ -20,7 +21,9 @@ server::server(QWidget *parent) :
     game_server = new QTcpServer();
     game_server->listen(QHostAddress::Any,1225);
     connect(game_server,SIGNAL(newConnection()),this,SLOT(connection_new()));
-    game_server_page = new game(par);
+    person1.set_coin(person1.get_coin()-50);
+    game_server_page = new game(person1,par);
+    game_server_page->setWindowTitle("Skull King");
     connect(game_server_page,SIGNAL(sig_send_card()),this,SLOT(slo_send_card()));
     connect(game_server_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
     connect(game_server_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));

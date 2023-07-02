@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1320</width>
-    <height>766</height>
+    <width>1311</width>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1321</width>
+      <width>1311</width>
       <height>741</height>
      </rect>
     </property>
@@ -42,18 +42,27 @@
    <widget class="QPushButton" name="btn_change">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>71</width>
-      <height>31</height>
+      <x>1100</x>
+      <y>580</y>
+      <width>161</width>
+      <height>91</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Tempus Sans ITC</family>
+      <pointsize>25</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/photos/playground.png);</string>
+    </property>
     <property name="text">
-     <string>change</string>
+     <string>Change</string>
     </property>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

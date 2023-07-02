@@ -39,17 +39,45 @@ game_logo::~game_logo()
 
 void game_logo::slo_next_page()
 {
-    //if ()
-    //{
-    //MainWindow* main_page = new MainWindow;
-    //main_page->setWindowTitle("Skull King");
-    //main_page->show();
-    //}
-    //else
-    //{
-    login* login_page = new login;
-    login_page->setWindowTitle("Skull King");
-    login_page->show();
-    //}
-    this->close();
+    person p1;
+    QFile gamer_file("gamer.txt");
+    if(gamer_file.exists())
+    {
+        if(!gamer_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QMessageBox::warning(this,"ERROR !","The operation was not successful !");
+            exit(13);
+        }
+        else
+        {
+            QTextStream in(&gamer_file);
+            QString username , password , name , phone , email , temp;
+            int coin;
+            in >> username >>
+                password >>
+                name >>
+                phone >>
+                email >>
+                coin ;
+            p1.set_username(username);
+            p1.set_password(password);
+            p1.set_name(name);
+            p1.set_phone(phone);
+            p1.set_email(email);
+            p1.set_coin(coin);
+        }
+        MainWindow* main_page = new MainWindow(p1);
+        main_page->setWindowTitle("Skull King");
+        this->close();
+        main_page->show();
+        return;
+    }
+    else
+    {
+        gamer_file.close();
+        login* login_page = new login;
+        login_page->setWindowTitle("Skull King");
+        this->close();
+        login_page->show();
+    }
 }

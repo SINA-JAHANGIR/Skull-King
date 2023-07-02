@@ -37,9 +37,9 @@
    <widget class="QLineEdit" name="line_phone">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>440</y>
-      <width>471</width>
+      <width>501</width>
       <height>61</height>
      </rect>
     </property>
@@ -70,10 +70,10 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_address">
+   <widget class="QLabel" name="lbl_email">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>220</x>
       <y>540</y>
       <width>211</width>
       <height>91</height>
@@ -87,16 +87,16 @@
      </font>
     </property>
     <property name="text">
-     <string>Address :</string>
+     <string>Email :</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_back_skull">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>40</y>
-      <width>291</width>
-      <height>441</height>
+      <x>930</x>
+      <y>50</y>
+      <width>361</width>
+      <height>371</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -138,12 +138,12 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLineEdit" name="line_address">
+   <widget class="QLineEdit" name="line_email">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>560</y>
-      <width>471</width>
+      <width>501</width>
       <height>61</height>
      </rect>
     </property>
@@ -161,9 +161,9 @@
    <widget class="QLineEdit" name="line_password">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>200</y>
-      <width>471</width>
+      <width>501</width>
       <height>61</height>
      </rect>
     </property>
@@ -253,9 +253,9 @@
    <widget class="QLineEdit" name="line_name">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>320</y>
-      <width>471</width>
+      <width>501</width>
       <height>61</height>
      </rect>
     </property>
@@ -293,10 +293,10 @@
    <widget class="QPushButton" name="btn_save">
     <property name="geometry">
      <rect>
-      <x>960</x>
-      <y>500</y>
-      <width>251</width>
-      <height>141</height>
+      <x>1000</x>
+      <y>430</y>
+      <width>211</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="font">
@@ -316,9 +316,9 @@
    <widget class="QLineEdit" name="line_username">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>80</y>
-      <width>471</width>
+      <width>501</width>
       <height>61</height>
      </rect>
     </property>
@@ -360,15 +360,38 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_cancel">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>560</y>
+      <width>211</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Tempus Sans ITC</family>
+      <pointsize>40</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/photos/playground.png);</string>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
+   </widget>
    <zorder>lbl_background</zorder>
    <zorder>lbl_phone</zorder>
    <zorder>line_phone</zorder>
    <zorder>lbl_skull_pirate_4</zorder>
-   <zorder>lbl_address</zorder>
+   <zorder>lbl_email</zorder>
    <zorder>lbl_back_skull</zorder>
    <zorder>lbl_skull_pirate</zorder>
    <zorder>lbl_skull_pirate_3</zorder>
-   <zorder>line_address</zorder>
+   <zorder>line_email</zorder>
    <zorder>line_password</zorder>
    <zorder>lbl_password</zorder>
    <zorder>lbl_skull_pirate_2</zorder>
@@ -378,6 +401,7 @@
    <zorder>lbl_userrname</zorder>
    <zorder>btn_save</zorder>
    <zorder>line_username</zorder>
+   <zorder>btn_cancel</zorder>
   </widget>
  </widget>
  <resources/>

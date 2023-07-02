@@ -1,6 +1,9 @@
 #ifndef SIGN_UP_H
 #define SIGN_UP_H
 
+#include "person.h"
+#include <QVector>
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -18,8 +21,11 @@ public:
 private slots:
     void on_btn_save_clicked();
 
+    void on_btn_cancel_clicked();
+
 private:
     Ui::sign_up *ui;
+    QWidget *par;
 };
 
 #endif // SIGN_UP_H

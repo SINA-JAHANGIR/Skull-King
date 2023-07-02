@@ -6,6 +6,7 @@
 #include "server.h"
 #include "client.h"
 #include "start.h"
+#include "person.h"
 
 namespace Ui {
 class start;
@@ -16,7 +17,7 @@ class start : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit start(QWidget *parent = nullptr);
+    explicit start(person,QWidget *parent = nullptr);
     ~start();
 
 
@@ -29,6 +30,7 @@ private:
     server *host;
     client *join;
     QWidget *par;
+    person p1;
 };
 
 #endif // START_H

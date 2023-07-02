@@ -23,7 +23,7 @@ login::~login()
 
 void login::on_btn_sign_in_clicked()
 {
-    sign_in* in_page = new sign_in;
+    sign_in* in_page = new sign_in(this);
     in_page->setWindowTitle("Skull King");
     this->close();
     in_page->show();
@@ -32,9 +32,15 @@ void login::on_btn_sign_in_clicked()
 
 void login::on_btn_sign_up_clicked()
 {
-    sign_up* up_page = new sign_up;
+    sign_up* up_page = new sign_up(this);
     up_page->setWindowTitle("Skull King");
     this->close();
     up_page->show();
+}
+
+
+void login::on_btn_exit_clicked()
+{
+    exit(13);
 }
 

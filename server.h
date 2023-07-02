@@ -15,6 +15,7 @@
 #include "game.h"
 #include "customized_button.h"
 #include "card.h"
+#include "person.h"
 
 namespace Ui {
 class server;
@@ -25,7 +26,7 @@ class server : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit server(QWidget *parent = nullptr);
+    explicit server(person,QWidget *parent = nullptr);
     ~server();
 
 public slots:
@@ -37,7 +38,6 @@ public slots:
     void slo_change_request();
     void slo_send_forecast();
     void slo_end_of_round();
-
     void slo_finish_animation();
 
 private slots:
@@ -58,6 +58,7 @@ private:
     std::thread thread;
     QSignalSpy* spy;
     QWidget *par;
+    person person1;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

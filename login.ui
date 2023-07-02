@@ -39,10 +39,10 @@
    <widget class="QPushButton" name="btn_sign_in">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>100</y>
-      <width>441</width>
-      <height>251</height>
+      <x>140</x>
+      <y>80</y>
+      <width>321</width>
+      <height>181</height>
      </rect>
     </property>
     <property name="font">
@@ -62,10 +62,10 @@
    <widget class="QPushButton" name="btn_sign_up">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>390</y>
-      <width>441</width>
-      <height>251</height>
+      <x>140</x>
+      <y>280</y>
+      <width>321</width>
+      <height>181</height>
      </rect>
     </property>
     <property name="font">
@@ -98,10 +98,34 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_exit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>480</y>
+      <width>321</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Tempus Sans ITC</family>
+      <pointsize>50</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/photos/playground.png);</string>
+    </property>
+    <property name="text">
+     <string>Exit</string>
+    </property>
+   </widget>
    <zorder>lbl_background</zorder>
    <zorder>label</zorder>
    <zorder>btn_sign_up</zorder>
    <zorder>btn_sign_in</zorder>
+   <zorder>btn_exit</zorder>
   </widget>
  </widget>
  <resources/>

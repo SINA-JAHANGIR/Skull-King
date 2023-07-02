@@ -11,6 +11,7 @@
 
 #include "card.h"
 #include "game.h"
+#include "person.h"
 
 namespace Ui {
 class client;
@@ -21,7 +22,7 @@ class client : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit client(QWidget *parent = nullptr);
+    explicit client(person,QWidget *parent = nullptr);
     ~client();
 
 public slots:
@@ -53,6 +54,7 @@ private:
     QSignalSpy* spy;
     QWidget *par;
     QThread *qth;
+    person person1;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

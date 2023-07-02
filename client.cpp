@@ -7,12 +7,13 @@
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 const int w = 100 , a = (600/400) , h = a*w;
 
-client::client(QWidget *parent) :
+client::client(person per1,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::client)
 {
     ui->setupUi(this);
     par = parent;
+    person1 = per1;
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - width()) / 2;
@@ -24,7 +25,9 @@ client::client(QWidget *parent) :
 
     connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
 
-    game_client_page = new game(par);
+    person1.set_coin(person1.get_coin()-50);
+    game_client_page = new game(person1,par);
+    game_client_page->setWindowTitle("Skull King");
     connect(game_client_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
     connect(game_client_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
     connect(this,SIGNAL(sig_change_request()),this,SLOT(slo_change_request()));
@@ -85,7 +88,7 @@ void client::on_btn_start_clicked()
         this->hide();
         game_client_page->show();
         game_client_page->game_client_start();
-        //    }
+//    }
 }
 
 void client::slo_read_card()
@@ -240,7 +243,7 @@ void client::slo_read_card()
             }
             else if(received == "reject")
             {
-                QMessageBox::information(game_client_page,"Change","Player2 rejected your request");
+                QMessageBox::information(game_client_page,"Skull King","Second player rejected your request !");
             }
             else if(received == "ok")
             {
@@ -301,6 +304,7 @@ void client::slo_finish_animation()
 void client::slo_change_request()
 {
     QMessageBox msbox(game_client_page);
+    msbox.setText("The second player has requested to exchange a card with you .");
     QPushButton *accept = msbox.addButton(tr("Accept"),QMessageBox::ActionRole);
     QPushButton *reject = msbox.addButton(tr("Reject"),QMessageBox::ActionRole);
 

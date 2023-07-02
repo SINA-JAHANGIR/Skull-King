@@ -20,6 +20,8 @@ private slots:
 
     void on_btn_sign_up_clicked();
 
+    void on_btn_exit_clicked();
+
 private:
     Ui::login *ui;
 };
