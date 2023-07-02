@@ -59,6 +59,8 @@ void server::connection_new(){
         thread = std::thread(&server::slo_read_card,this);
         spy = new QSignalSpy(this,SIGNAL(sig_continue()));
         ready = true;
+        client_socket->write("username");
+        client_socket->waitForBytesWritten(1000);
     }
     else
     {
@@ -270,6 +272,15 @@ void server::slo_read_card()
                 client_socket->waitForBytesWritten(-1);
                 client_socket->waitForReadyRead(-1);
                 QByteArray temp2 = client_socket->readAll();
+            }
+            else if(received == "username")
+            {
+                QString un = game_server_page->player1.get_username();
+                client_socket->write(un.toStdString().c_str());
+                client_socket->waitForBytesWritten(-1);
+                client_socket->waitForReadyRead(-1);
+                QByteArray temp2 = client_socket->readAll();
+                game_server_page->player2.set_username(QString::fromStdString(temp2.toStdString()));
             }
             else if(received == "reject")
             {

@@ -261,6 +261,18 @@ void client::slo_read_card()
             {
                 emit sig_continue();
             }
+            else if(received == "username")
+            {
+                QString un ="username";
+                socket->write(un.toStdString().c_str());
+                socket->waitForBytesWritten(-1);
+                socket->waitForReadyRead(-1);
+                QByteArray temp2 = socket->readAll();
+                game_client_page->player2.set_username(QString::fromStdString(temp2.toStdString()));
+                un = game_client_page->player1.get_username();
+                socket->write(un.toStdString().c_str());
+                socket->waitForBytesWritten(-1);
+            }
             else if(received == "Server is full.")
             {
                 ui->label->setText("Server is full");
