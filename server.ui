@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btn_start">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -106,12 +106,12 @@
     <property name="font">
      <font>
       <family>Tempus Sans ITC</family>
-      <pointsize>50</pointsize>
-      <bold>true</bold>
+      <pointsize>26</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
-     <string>.......................................</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

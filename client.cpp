@@ -20,10 +20,6 @@ client::client(person per1,QWidget *parent) :
     const int y = (screenGeometry.height() - height()) / 2;
     move(x, y - 30);
     socket = new QTcpSocket;
-    socket->connectToHost("127.0.0.1",1225);
-    connect(socket,SIGNAL(connected()),this,SLOT(connected_to_server()));
-
-    connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
 
     person1.set_coin(person1.get_coin()-50);
     game_client_page = new game(person1,par);
@@ -32,13 +28,20 @@ client::client(person per1,QWidget *parent) :
     connect(game_client_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
     connect(this,SIGNAL(sig_change_request()),this,SLOT(slo_change_request()));
     thread = std::thread(&client::slo_read_card,this);
-    spy = new QSignalSpy(this,SIGNAL(sig_continue()));
+//    spy = new QSignalSpy(this,SIGNAL(sig_continue()));
 //    connect(this,SIGNAL(sig_game_continue()),&game_client_page->loop,SLOT(quit()));
     connect(this,SIGNAL(sig_game_continue()),game_client_page,SLOT(slo_selected_p2_card_btn()));
     connect(game_client_page,SIGNAL(sig_send_forecast()),this,SLOT(slo_send_forecast()));
     connect(this,SIGNAL(sig_start()),this,SLOT(slo_call_dealer_animation()));
     connect(this,SIGNAL(sig_get_forecast()),&game_client_page->start,SLOT(quit()));
 
+    connect(game_client_page,SIGNAL(sig_stop()),this,SLOT(slo_stop()));
+    connect(game_client_page,SIGNAL(sig_resume()),this,SLOT(slo_resume()));
+    connect(this,SIGNAL(sig_stop()),game_client_page,SLOT(slo_stop()));
+    connect(this,SIGNAL(sig_resume()),game_client_page,SLOT(slo_resume()));
+
+    connect(game_client_page,SIGNAL(sig_exit()),this,SLOT(slo_exit()));
+    connect(this,SIGNAL(sig_exit()),game_client_page,SLOT(slo_exit()));
 }
 
 client::~client()
@@ -47,10 +50,18 @@ client::~client()
     delete ui;
 }
 
+void client::on_pushButton_clicked()
+{
+    QString ip_address = ui->line_ip->text();
+    socket->connectToHost(ip_address,1225);
+    connect(socket,SIGNAL(connected()),this,SLOT(connected_to_server()));
+    connect(socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
+}
+
 void client::connected_to_server()
 {
-    ui->btn_start->setEnabled(true);
-
+    ui->pushButton->setEnabled(false);
+    ui->label->setText("Connected to server");
 }
 
 
@@ -78,17 +89,6 @@ card client::qbytearray_to_card(QByteArray& input)
     output.set_number(number);
 
     return output;
-}
-
-void client::on_btn_start_clicked()
-{
-//    if(ready)
-//    {
-
-        this->hide();
-        game_client_page->show();
-        game_client_page->game_client_start();
-//    }
 }
 
 void client::slo_read_card()
@@ -149,6 +149,9 @@ void client::slo_read_card()
                     {
                         game_client_page->turn = p2;
                     }
+                    this->hide();
+                    game_client_page->show();
+                    game_client_page->game_client_start();
                 }
             }
             else if(received=="selected")
@@ -245,9 +248,39 @@ void client::slo_read_card()
             {
                 QMessageBox::information(game_client_page,"Skull King","Second player rejected your request !");
             }
+            else if(received == "Stop")
+            {
+                emit sig_stop();
+            }
+            else if(received == "Resume")
+            {
+                emit sig_resume();
+            }
+            else if(received == "Exit")
+            {
+                emit sig_exit();
+            }
             else if(received == "ok")
             {
                 emit sig_continue();
+            }
+            else if(received == "username")
+            {
+                QString un ="username";
+                socket->write(un.toStdString().c_str());
+                socket->waitForBytesWritten(-1);
+                socket->waitForReadyRead(-1);
+                QByteArray temp2 = socket->readAll();
+                game_client_page->player2.set_username(QString::fromStdString(temp2.toStdString()));
+                un = game_client_page->player1.get_username();
+                socket->write(un.toStdString().c_str());
+                socket->waitForBytesWritten(-1);
+            }
+            else if(received == "Server is full.")
+            {
+                ui->label->setText("Server is full");
+                QMessageBox::information(this,"Connection error","Server is full");
+                socket->disconnectFromHost();
             }
 //        }
 //    }
@@ -323,4 +356,25 @@ void client::slo_change_request()
         socket->waitForBytesWritten(-1);
         msbox.close();
     }
+}
+
+void client::slo_stop()
+{
+    QString temp = "Stop";
+    socket->write(temp.toStdString().c_str());
+    socket->waitForBytesWritten(-1);
+}
+
+void client::slo_resume()
+{
+    QString temp = "Resume";
+    socket->write(temp.toStdString().c_str());
+    socket->waitForBytesWritten(-1);
+}
+
+void client::slo_exit()
+{
+    QString temp = "Exit";
+    socket->write(temp.toStdString().c_str());
+    socket->waitForBytesWritten(-1);
 }
