@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QSignalSpy>
 #include <QEventLoop>
+#include <QTimer>
 
 #include "customized_button.h"
 #include "card.h"
@@ -46,12 +47,24 @@ private slots:
     void slo_rate_round();
     void slo_back_to_main();
     void on_btn_change_clicked();
+    void on_btn_exit_clicked();
+    void on_btn_stop_clicked();
+    void slo_stop();
+    void slo_resume();
+    void slo_exit();
+    void slo_time_warning();
+    void slo_countdown();
+
 signals:
     void sig_send_card();
     void sig_send_one_card(card);
     void sig_change_card();
     void sig_send_forecast();
     void sig_end_of_round();
+    void sig_stop();
+    void sig_resume();
+    void sig_timeout();
+    void sig_exit();
 
 private:
     Ui::game *ui;
@@ -80,6 +93,16 @@ private:
     person person1;
     QVector<person> people;
     QString last_cards_p1 , last_cards_p2;
+    bool stop = false;
+    int n_stopped = 0 ;
+    bool p2_exit = false;
+    QSignalSpy* stop_spy;
+    QTimer* timer;
+    QTimer* timer2;
+    QTimer* seconds_counter;
+    int timerCountdown = 10;
+    QLabel* lbl_seconds_counter;
+    QLabel* lbl_text_dialog;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);

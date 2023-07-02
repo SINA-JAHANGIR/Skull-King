@@ -34,9 +34,13 @@ public slots:
     void slo_call_dealer_animation();
     void slo_finish_animation();
     void slo_change_request();
+    void slo_stop();
+    void slo_resume();
+    void slo_exit();
 
 private slots:
-    void on_btn_start_clicked();
+
+    void on_pushButton_clicked();
 
 signals:
     void sig_continue();
@@ -44,6 +48,9 @@ signals:
     void sig_start();
     void sig_get_forecast();
     void sig_change_request();
+    void sig_stop();
+    void sig_resume();
+    void sig_exit();
 
 
 private:
