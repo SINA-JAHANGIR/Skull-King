@@ -97,16 +97,16 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>340</x>
       <y>400</y>
-      <width>591</width>
+      <width>651</width>
       <height>261</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Tempus Sans ITC</family>
-      <pointsize>26</pointsize>
+      <pointsize>30</pointsize>
       <bold>false</bold>
      </font>
     </property>
