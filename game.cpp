@@ -1247,6 +1247,7 @@ void game::update_history()
 
 void game::slo_back_to_main()
 {
+    emit sig_end();
     Sleep(5000);
     this->close();
     par->show();
@@ -1363,7 +1364,7 @@ void game::on_btn_exit_clicked()
        }
        emit sig_exit();
        msbox.close();
-       Sleep(800);
+       emit sig_end();
        this->close();
        par->show();
     }
@@ -1415,8 +1416,10 @@ void game::slo_exit()
     player2.hide_cards();
     player2.hide_win_cards();
     p2_exit = true;
-    QMessageBox::information(this,"Exit","Player 2 left the game !");
-    game_win();
+    QMessageBox::information(this,"Exit",player2.get_username() + " left the game !");
+    emit sig_end();
+    this->close();
+    par->show();
 }
 
 void game::slo_time_warning()

@@ -42,11 +42,14 @@ server::server(person per1,QWidget *parent) :
 
     connect(game_server_page,SIGNAL(sig_exit()),this,SLOT(slo_exit()));
     connect(this,SIGNAL(sig_exit()),game_server_page,SLOT(slo_exit()));
+    connect(game_server_page,SIGNAL(sig_end()),this,SLOT(slo_end()));
 }
 
 server::~server()
 {
     thread.join();
+    delete client_socket;
+    delete game_server;
     delete ui;
 }
 
@@ -58,7 +61,7 @@ void server::connection_new(){
         client_socket = game_server->nextPendingConnection();
         connect(client_socket,SIGNAL(readyRead()),this,SLOT(slo_read_card()));
         this->ui->btn_start->setEnabled(true);
-        ui->label->setText(client_socket->localAddress().toString() + " Connected");
+//        ui->label->setText(client_socket->localAddress().toString() + " Connected");
         thread = std::thread(&server::slo_read_card,this);
         spy = new QSignalSpy(this,SIGNAL(sig_continue()));
         ready = true;
@@ -285,6 +288,7 @@ void server::slo_read_card()
                 client_socket->waitForReadyRead(-1);
                 QString temp2 = client_socket->readAll();
                 game_server_page->player2.set_username(temp2);
+                ui->label->setText(game_server_page->player2.get_username() + " Connected");
                 game_server_page->lbl_username_p2->setText(game_server_page->player2.get_username());
             }
             else if(received == "reject")
@@ -389,4 +393,14 @@ void server::slo_exit()
     QString temp = "Exit";
     client_socket->write(temp.toStdString().c_str());
     client_socket->waitForBytesWritten(-1);
+}
+
+void server::slo_end()
+{
+    num_player--;
+    client_socket->disconnectFromHost();
+//    client_socket->close();
+//    client_socket->deleteLater();
+    this->close();
+    delete this;
 }

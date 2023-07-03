@@ -65,6 +65,7 @@ signals:
     void sig_resume();
     void sig_timeout();
     void sig_exit();
+    void sig_end();
 
 private:
     Ui::game *ui;

@@ -42,10 +42,12 @@ client::client(person per1,QWidget *parent) :
 
     connect(game_client_page,SIGNAL(sig_exit()),this,SLOT(slo_exit()));
     connect(this,SIGNAL(sig_exit()),game_client_page,SLOT(slo_exit()));
+    connect(game_client_page,SIGNAL(sig_end()),this,SLOT(slo_end()));
 }
 
 client::~client()
 {
+    delete socket;
     thread.join();
     delete ui;
 }
@@ -61,7 +63,7 @@ void client::on_pushButton_clicked()
 void client::connected_to_server()
 {
     ui->pushButton->setEnabled(false);
-    ui->label->setText("Connected to server");
+//    ui->label->setText("Connected to server");
 }
 
 
@@ -275,6 +277,7 @@ void client::slo_read_card()
                 un = game_client_page->player1.get_username();
                 socket->write(un.toStdString().c_str());
                 socket->waitForBytesWritten(-1);
+                ui->label->setText(" Connected to " + game_client_page->player2.get_username());
                 game_client_page->lbl_username_p2->setText(game_client_page->player2.get_username());
             }
             else if(received == "Server is full.")
@@ -378,4 +381,14 @@ void client::slo_exit()
     QString temp = "Exit";
     socket->write(temp.toStdString().c_str());
     socket->waitForBytesWritten(-1);
+}
+
+void client::slo_end()
+{
+    socket->disconnectFromHost();
+    socket->close();
+    socket->deleteLater();
+    this->close();
+
+    delete this;
 }
