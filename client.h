@@ -37,6 +37,7 @@ public slots:
     void slo_stop();
     void slo_resume();
     void slo_exit();
+    void slo_end();
 
 private slots:
 

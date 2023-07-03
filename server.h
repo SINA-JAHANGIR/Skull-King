@@ -42,6 +42,7 @@ public slots:
     void slo_stop();
     void slo_resume();
     void slo_exit();
+    void slo_end();
 
 private slots:
     void on_btn_start_clicked();
