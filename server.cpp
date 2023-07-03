@@ -62,7 +62,8 @@ void server::connection_new(){
         thread = std::thread(&server::slo_read_card,this);
         spy = new QSignalSpy(this,SIGNAL(sig_continue()));
         ready = true;
-        client_socket->write("username");
+        QString t = "username";
+        client_socket->write(t.toStdString().c_str());
         client_socket->waitForBytesWritten(1000);
     }
     else
@@ -282,12 +283,13 @@ void server::slo_read_card()
                 client_socket->write(un.toStdString().c_str());
                 client_socket->waitForBytesWritten(-1);
                 client_socket->waitForReadyRead(-1);
-                QByteArray temp2 = client_socket->readAll();
-                game_server_page->player2.set_username(QString::fromStdString(temp2.toStdString()));
+                QString temp2 = client_socket->readAll();
+                game_server_page->player2.set_username(temp2);
+                game_server_page->lbl_username_p2->setText(game_server_page->player2.get_username());
             }
             else if(received == "reject")
             {
-                QMessageBox::information(game_server_page,"Change","Player2 rejected your request");
+                QMessageBox::information(game_server_page,"Skull King",game_server_page->player2.get_username() +" rejected your request");
             }
             else if(received == "accept")
             {
@@ -320,6 +322,7 @@ void server::slo_change_card()
 void server::slo_change_request()
 {
     QMessageBox msbox(game_server_page);
+    msbox.setText( game_server_page->player2.get_username() + " has requested to exchange a card with you .");
     QPushButton *accept = msbox.addButton(tr("Accept"),QMessageBox::ActionRole);
     QPushButton *reject = msbox.addButton(tr("Reject"),QMessageBox::ActionRole);
 

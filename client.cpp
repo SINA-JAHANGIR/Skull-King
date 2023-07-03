@@ -246,7 +246,7 @@ void client::slo_read_card()
             }
             else if(received == "reject")
             {
-                QMessageBox::information(game_client_page,"Skull King","Second player rejected your request !");
+                QMessageBox::information(game_client_page,"Skull King",game_client_page->player2.get_username() +" rejected your request !");
             }
             else if(received == "Stop")
             {
@@ -270,11 +270,12 @@ void client::slo_read_card()
                 socket->write(un.toStdString().c_str());
                 socket->waitForBytesWritten(-1);
                 socket->waitForReadyRead(-1);
-                QByteArray temp2 = socket->readAll();
-                game_client_page->player2.set_username(QString::fromStdString(temp2.toStdString()));
+                QString temp2 = socket->readAll();
+                game_client_page->player2.set_username(temp2);
                 un = game_client_page->player1.get_username();
                 socket->write(un.toStdString().c_str());
                 socket->waitForBytesWritten(-1);
+                game_client_page->lbl_username_p2->setText(game_client_page->player2.get_username());
             }
             else if(received == "Server is full.")
             {
@@ -337,7 +338,7 @@ void client::slo_finish_animation()
 void client::slo_change_request()
 {
     QMessageBox msbox(game_client_page);
-    msbox.setText("The second player has requested to exchange a card with you .");
+    msbox.setText(game_client_page->player2.get_username() + " has requested to exchange a card with you .");
     QPushButton *accept = msbox.addButton(tr("Accept"),QMessageBox::ActionRole);
     QPushButton *reject = msbox.addButton(tr("Reject"),QMessageBox::ActionRole);
 

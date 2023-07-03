@@ -100,7 +100,7 @@ private:
     QTimer* timer;
     QTimer* timer2;
     QTimer* seconds_counter;
-    int timerCountdown = 10;
+    int timerCountdown = 11;
     QLabel* lbl_seconds_counter;
     QLabel* lbl_text_dialog;
     // Functions :

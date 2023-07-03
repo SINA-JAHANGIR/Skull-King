@@ -556,9 +556,9 @@ void game::inactive_card_click()
 {
     timer->stop();
     seconds_counter->stop();
-    if(timerCountdown < 10)
+    if(timerCountdown < 11)
     {
-        timerCountdown = 10;
+        timerCountdown = 11;
         lbl_seconds_counter->hide();
         lbl_text_dialog->hide();
         delete lbl_seconds_counter;
@@ -575,9 +575,9 @@ void game::slo_selected_p1_card_btn(customized_button* input)
 {
     timer->stop();
     seconds_counter->stop();
-    if(timerCountdown < 10)
+    if(timerCountdown < 11)
     {
-        timerCountdown = 10;
+        timerCountdown = 11;
         lbl_seconds_counter->hide();
         lbl_text_dialog->hide();
         delete lbl_seconds_counter;
@@ -1287,17 +1287,28 @@ void game::on_btn_stop_clicked()
 
        if(stop == true)
        {
-        stop = false;
-        ui->btn_stop->setText("Stop");
-        emit sig_resume();
+            stop = false;
+            ui->btn_stop->setText("Stop");
+            emit sig_resume();
 
-        ui->btn_change->setEnabled(true);
-        ui->btn_exit->setEnabled(true);
-        if((turn == p1 && player1.get_selected_card_btn() == nullptr) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
-        {
-            slo_active_card_click();
+            ui->btn_change->setEnabled(true);
+            ui->btn_exit->setEnabled(true);
+            if((turn == p1 && player1.get_selected_card_btn() == nullptr ) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
+            {
+                if(r == 0)
+                {
+                   slo_active_card_click();
+                }
+                else if (turn == p1 &&  player1.get_forecast_number() != -1)
+                {
+                   slo_active_card_click();
+                }
+                else if(turn == p2)
+                {
+                   slo_active_card_click();
+                }
+            }
         }
-       }
     }
     else if(stop == true)
     {
@@ -1308,9 +1319,20 @@ void game::on_btn_stop_clicked()
 
        ui->btn_change->setEnabled(true);
        ui->btn_exit->setEnabled(true);
-       if((turn == p1 && player1.get_selected_card_btn() == nullptr) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
+       if((turn == p1 && player1.get_selected_card_btn() == nullptr ) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
        {
-            slo_active_card_click();
+            if(r == 0)
+            {
+                slo_active_card_click();
+            }
+            else if (turn == p1 &&  player1.get_forecast_number() != -1)
+            {
+                slo_active_card_click();
+            }
+            else if(turn == p2)
+            {
+                slo_active_card_click();
+            }
        }
     }
     else if(stop == false && n_stopped >= 2)
@@ -1331,6 +1353,16 @@ void game::on_btn_exit_clicked()
     }
     else if(msbox.clickedButton() == exit)
     {
+       timer->stop();
+       seconds_counter->stop();
+       if(timerCountdown < 11)
+       {
+            timerCountdown = 11;
+            lbl_seconds_counter->hide();
+            lbl_text_dialog->hide();
+            delete lbl_seconds_counter;
+            delete lbl_text_dialog;
+       }
        emit sig_exit();
        msbox.close();
        Sleep(800);
@@ -1351,14 +1383,35 @@ void game::slo_resume()
     ui->btn_change->setEnabled(true);
     ui->btn_exit->setEnabled(true);
     ui->btn_stop->setEnabled(true);
-    if((turn == p1 && player1.get_selected_card_btn() == nullptr) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
+    if((turn == p1 && player1.get_selected_card_btn() == nullptr ) || (turn == p2 && player2.get_selected_card_btn() != nullptr))
     {
-       slo_active_card_click();
+       if(r == 0)
+       {
+            slo_active_card_click();
+       }
+       else if (turn == p1 &&  player1.get_forecast_number() != -1)
+       {
+            slo_active_card_click();
+       }
+       else if(turn == p2)
+       {
+            slo_active_card_click();
+       }
     }
 }
 
 void game::slo_exit()
 {
+    timer->stop();
+    seconds_counter->stop();
+    if(timerCountdown < 11)
+    {
+       timerCountdown = 11;
+       lbl_seconds_counter->hide();
+       lbl_text_dialog->hide();
+       delete lbl_seconds_counter;
+       delete lbl_text_dialog;
+    }
     player1.hide_cards();
     player1.hide_win_cards();
     player2.hide_cards();
@@ -1370,6 +1423,7 @@ void game::slo_exit()
 
 void game::slo_time_warning()
 {
+    timerCountdown--;
     lbl_seconds_counter = new QLabel(this);
     lbl_seconds_counter->setGeometry(QRect(width()/2-50,height()/2-30,100,100));
     lbl_seconds_counter->setText(QString::number(timerCountdown));
