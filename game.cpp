@@ -804,6 +804,10 @@ void game::slo_rate_round()
     if (r == 0)
     {
         r++;
+        player1.clear_win_cards();
+        player2.clear_win_cards();
+        player1.clear_cards();
+        player2.clear_cards();
         emit sig_end_of_round();
     }
     else

@@ -25,9 +25,9 @@ game_logo::game_logo(QWidget *parent) :
     lbl_logo->raise();
     lbl_logo->show();
     animation = new QPropertyAnimation(lbl_logo,"geometry");
-    animation->setDuration(1000);
+    animation->setDuration(1500);
     animation->setStartValue(QRect(width()/2-325,0,650,375));
-    animation->setEndValue(QRect(width()/2-325,height()/2-375,1300,750));
+    animation->setEndValue(QRect(width()/2-325,height()/2-400,1300,750));
     animation->start();
     connect(animation,SIGNAL(finished()),this,SLOT(slo_next_page()));
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1300</width>
-    <height>750</height>
+    <height>739</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -37,8 +37,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1300</width>
-      <height>750</height>
+      <width>1311</width>
+      <height>741</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -46,6 +46,31 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_altf4">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>530</y>
+      <width>1311</width>
+      <height>200</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Tempus Sans ITC</family>
+      <pointsize>100</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Alt+F4</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
