@@ -116,11 +116,13 @@ void change::on_btn_save_clicked()
         }
     }
     file.close();
+    QFile history_file(p1.get_username()+".txt");
     p1.set_username(ui->line_username->text());
     p1.set_password(ui->line_password->text());
     p1.set_name(ui->line_name->text());
     p1.set_phone(ui->line_phone->text());
     p1.set_email(ui->line_email->text());
+    history_file.rename(p1.get_username()+".txt");
     if(!file.open(QIODevice::WriteOnly | QIODevice::Append))
     {
         QMessageBox::warning(this,"ERROR !","The operation was not successful !");

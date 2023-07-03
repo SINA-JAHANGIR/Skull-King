@@ -27,6 +27,7 @@ private:
     QWidget *par;
     person person1;
     QString change_card_stylesheet(int);
+    void change_lbl_stylesheet(QLabel*,QString);
     QVector<QPushButton*> cards;
 };
 

@@ -17,8 +17,8 @@ history::history(person per1,QWidget *parent) :
     const int x = (screenGeometry.width() - width()) / 2;
     const int y = (screenGeometry.height() - height()) / 2;
     move(x, y - 30);
-    int win_number = 0 , lose_number = 0 , draw_number = 0 ;
-    QString p2_username_1 = "----------", p2_username_2 = "----------", p2_username_3 = "----------",
+    int coin = person1.get_coin() , win_number = 0 , lose_number = 0 , draw_number = 0 ;
+    QString username = "----------" , p2_username_1 = "----------", p2_username_2 = "----------", p2_username_3 = "----------",
         win_lose1 = "-----", win_lose2 = "-----" , win_lose3 = "-----";
     int p1_card_1 = 100 , p1_card_2 = 100 , p1_card_3 = 100 , p2_card_1 = 100 , p2_card_2 = 100 , p2_card_3 = 100 ;
     QFile history_file(person1.get_username()+".txt");
@@ -32,7 +32,9 @@ history::history(person per1,QWidget *parent) :
         else
         {
             QTextStream in(&history_file);
-            in >> win_number >>
+            in >> coin >>
+                username >>
+                win_number >>
                 lose_number >>
                 draw_number >>
                 p2_username_1 >>
@@ -51,7 +53,7 @@ history::history(person per1,QWidget *parent) :
         history_file.close();
     }
     ui->lbl_p1_username->setText(person1.get_username());
-    ui->lbl_coin_number->setText(QString::number(person1.get_coin()));
+    ui->lbl_coin_number->setText(QString::number(coin));
     ui->lbl_win_number->setText(QString::number(win_number));
     ui->lbl_lose_number->setText(QString::number(lose_number));
     ui->lbl_draw_number->setText(QString::number(draw_number));
@@ -59,8 +61,11 @@ history::history(person per1,QWidget *parent) :
     ui->lbl_p2_username_2->setText(p2_username_2);
     ui->lbl_p2_username_3->setText(p2_username_3);
     ui->lbl_p1_win_lose_1->setText(win_lose1);
+    change_lbl_stylesheet( ui->lbl_p1_win_lose_1,win_lose1);
     ui->lbl_p1_win_lose_2->setText(win_lose2);
+    change_lbl_stylesheet( ui->lbl_p1_win_lose_2,win_lose2);
     ui->lbl_p1_win_lose_3->setText(win_lose3);
+    change_lbl_stylesheet( ui->lbl_p1_win_lose_3,win_lose3);
     QString temp;
 
     QPushButton* btn_p1_1 = new QPushButton;
@@ -147,5 +152,23 @@ QString history::change_card_stylesheet(int n)
         temp = "QPushButton{border-image: url(:/photos/skull-king-pirate.png);}";
     }
     return temp;
+}
+
+void history::change_lbl_stylesheet(QLabel* lbl,QString input)
+{
+    QString temp;
+    if (input == "Win" )
+    {
+        temp = "QLabel {color: green;}";
+    }
+    else if (input == "Lose")
+    {
+        temp = "QLabel {color: red;}";
+    }
+    else if (input == "Draw")
+    {
+        temp = "QLabel {color: yellow;}";
+    }
+    lbl->setStyleSheet(temp);
 }
 
