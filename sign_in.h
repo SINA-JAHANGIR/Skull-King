@@ -2,7 +2,6 @@
 #define SIGN_IN_H
 
 #include "person.h"
-
 #include <QMainWindow>
 
 enum with{password,phone};
@@ -22,7 +21,6 @@ public:
 private slots:
     void on_btn_log_in_clicked();    
     void on_btn_forgot_clicked();
-
     void on_btn_back_clicked();
 
 private:
