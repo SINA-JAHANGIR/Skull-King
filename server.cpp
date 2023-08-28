@@ -6,10 +6,11 @@
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 const int w = 100 , a = (600/400) , h = a*w;
 
-server::server(person per1,QWidget *parent) :
+server::server(person per1,QMediaPlayer* fmusic,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::server)
 {
+    first_music = fmusic;
     ui->setupUi(this);
     par = parent;
     person1 = per1;
@@ -23,7 +24,7 @@ server::server(person per1,QWidget *parent) :
     game_server->setMaxPendingConnections(1);
     connect(game_server,SIGNAL(newConnection()),this,SLOT(connection_new()));
     person1.set_coin(person1.get_coin()-50);
-    game_server_page = new game(person1,par);
+    game_server_page = new game(person1,first_music,par);
     game_server_page->setWindowTitle("Skull King");
     connect(game_server_page,SIGNAL(sig_send_card()),this,SLOT(slo_send_card()));
     connect(game_server_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
@@ -161,6 +162,13 @@ void server::change_card()
 
 void server::on_btn_start_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     // if (ready)
     // {
            this->close();

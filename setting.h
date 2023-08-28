@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include "person.h"
+#include <QMediaPlayer>
 
 namespace Ui {
 class setting;
@@ -15,7 +16,7 @@ class setting : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit setting(person,QWidget *parent = nullptr);
+    explicit setting(person,QMediaPlayer*,QWidget *parent = nullptr);
     ~setting();
 
 private slots:
@@ -28,6 +29,7 @@ private:
     Ui::setting *ui;
     QWidget *par;
     person p1;
+    QMediaPlayer* first_music;
 };
 
 #endif // SETTING_H

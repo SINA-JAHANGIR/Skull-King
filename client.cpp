@@ -7,10 +7,11 @@
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 const int w = 100 , a = (600/400) , h = a*w;
 
-client::client(person per1,QWidget *parent) :
+client::client(person per1,QMediaPlayer* fmusic,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::client)
 {
+    first_music = fmusic;
     ui->setupUi(this);
     par = parent;
     person1 = per1;
@@ -22,7 +23,7 @@ client::client(person per1,QWidget *parent) :
     socket = new QTcpSocket;
 
     person1.set_coin(person1.get_coin()-50);
-    game_client_page = new game(person1,par);
+    game_client_page = new game(person1,first_music,par);
     game_client_page->setWindowTitle("Skull King");
     connect(game_client_page,SIGNAL(sig_send_one_card(card)),this,SLOT(slo_send_one_card(card)));
     connect(game_client_page,SIGNAL(sig_change_card()),this,SLOT(slo_change_card()));
@@ -54,6 +55,13 @@ client::~client()
 
 void client::on_pushButton_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     QString ip_address = ui->line_ip->text();
     socket->connectToHost(ip_address,1225);
     connect(socket,SIGNAL(connected()),this,SLOT(connected_to_server()));

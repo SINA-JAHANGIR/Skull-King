@@ -14,11 +14,13 @@ customized_button::customized_button(QWidget *parent)
 void customized_button::slo_number_clicked()
 
 {
+    number_sound->play();
     emit sig_number_clicked(button_number);
 }
 
 void customized_button::slo_card_clicked()
 {
+    card_sound->play();
     emit sig_card_clicked(this);
 }
 
@@ -26,6 +28,12 @@ customized_button::customized_button(int input)
 {
     button_number = input;
     connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_number_clicked()));
+    number_sound = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    number_sound->setAudioOutput(audioOutput);
+    connect(number_sound, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    number_sound->setSource(QUrl("qrc:/sounds/pop-up-something.mp3"));
+    audioOutput->setVolume(100);
 }
 
 customized_button::customized_button(card input)
@@ -33,6 +41,12 @@ customized_button::customized_button(card input)
     button_card = input;
     button_number = -1;
     connect(this,SIGNAL(clicked(bool)),this,SLOT(slo_card_clicked()));
+    card_sound = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    card_sound->setAudioOutput(audioOutput);
+    connect(card_sound, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    card_sound->setSource(QUrl("qrc:/sounds/card-sounds.mp3"));
+    audioOutput->setVolume(100);
 }
 
 void customized_button::set_btn_number(int input)

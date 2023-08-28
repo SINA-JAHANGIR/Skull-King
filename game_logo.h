@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPropertyAnimation>
+#include <QtMultimedia>
+#include <QMediaPlayer>
 
 namespace Ui {
 class game_logo;
@@ -22,6 +24,7 @@ private:
     Ui::game_logo *ui;
     QPropertyAnimation* animation;
     QLabel* lbl_logo;
+    QMediaPlayer* first_music;
 };
 
 #endif // GAME_LOGO_H

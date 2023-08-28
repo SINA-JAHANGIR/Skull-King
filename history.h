@@ -6,6 +6,8 @@
 #include <QLabel>
 #include <QVector>
 #include <QPushButton>
+#include <QMediaPlayer>
+#include <QtMultimedia>
 
 namespace Ui {
 class history;

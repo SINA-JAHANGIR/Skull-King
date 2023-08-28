@@ -3,6 +3,8 @@
 
 #include "person.h"
 #include <QMainWindow>
+#include <QMediaPlayer>
+#include <QtMultimedia>
 
 enum with{password,phone};
 
@@ -15,7 +17,7 @@ class sign_in : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit sign_in(QWidget *parent = nullptr);
+    explicit sign_in(QMediaPlayer*,QWidget *parent = nullptr);
     ~sign_in();
 
 private slots:
@@ -27,6 +29,7 @@ private:
     Ui::sign_in *ui;
     with login_with = password;
     QWidget *par;
+    QMediaPlayer* first_music;
 };
 
 #endif // SIGN_IN_H

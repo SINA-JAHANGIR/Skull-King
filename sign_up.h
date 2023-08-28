@@ -7,6 +7,9 @@
 #include <QLabel>
 #include <QString>
 #include <QRegularExpression>
+#include <QMediaPlayer>
+#include <QtMultimedia>
+
 
 
 namespace Ui {
@@ -18,7 +21,7 @@ class sign_up : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit sign_up(QWidget *parent = nullptr);
+    explicit sign_up(QMediaPlayer*,QWidget *parent = nullptr);
     ~sign_up();
 
 private slots:
@@ -38,7 +41,7 @@ private:
     bool name = false;
     bool phone = false;
     bool email = false;
-
+    QMediaPlayer* first_music;
     void change_label(QLabel*,QString,bool);
 };
 

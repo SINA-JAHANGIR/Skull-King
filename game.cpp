@@ -12,10 +12,12 @@ using namespace std;
 const int w = 100 , a = (600/400) , h = a*w;
 //
 
-game::game(person per1,QWidget *parent) :
+game::game(person per1,QMediaPlayer* fmusic,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::game)
 {
+    first_music = fmusic;
+
     ui->setupUi(this);
     par = parent;
     person1 = per1;
@@ -43,7 +45,6 @@ game::~game()
     delete stop_spy;
     delete ui;
 }
-
 
 void game::set_all_cards()
 {
@@ -1251,11 +1252,20 @@ void game::slo_back_to_main()
     Sleep(5000);
     this->close();
     par->show();
+    second_music->pause();
+    first_music->play();
 }
 
 
 void game::on_btn_change_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     if(player1.get_forecast_number() == -1 || player2.get_forecast_number() == -1)
     {
         QMessageBox::information(this,"Skull King","You can't now ! Please try again after you and other player have selected your forecast number");
@@ -1272,6 +1282,13 @@ void game::on_btn_change_clicked()
 
 void game::on_btn_stop_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     if(stop == false && n_stopped < 2)
     {
        stop = true;
@@ -1341,6 +1358,13 @@ void game::on_btn_stop_clicked()
 }
 void game::on_btn_exit_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     QMessageBox msbox(this);
     msbox.setText("Are you sure ?");
     QPushButton *cancel = msbox.addButton(tr("Cancel"),QMessageBox::ActionRole);
@@ -1367,6 +1391,8 @@ void game::on_btn_exit_clicked()
        emit sig_end();
        this->close();
        par->show();
+       second_music->pause();
+       first_music->play();
     }
 }
 
@@ -1420,6 +1446,8 @@ void game::slo_exit()
     emit sig_end();
     this->close();
     par->show();
+    second_music->pause();
+    first_music->play();
 }
 
 void game::slo_time_warning()
@@ -1471,9 +1499,27 @@ void game::slo_countdown()
 
 void game::game_server_start()
 {
+    first_music->pause();
+    second_music = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(0.13);
+    second_music->setAudioOutput(audioOutput);
+    connect(second_music, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    second_music->setSource(QUrl("qrc:/sounds/Klaus Badelt - He's a Pirate (320).mp3"));
+    second_music->setLoops(13);
+    second_music->play();
     make_card(r);
 }
 
 void game::game_client_start()
 {
+    first_music->pause();
+    second_music = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(0.13);
+    second_music->setAudioOutput(audioOutput);
+    connect(second_music, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    second_music->setSource(QUrl("qrc:/sounds/Klaus Badelt - He's a Pirate (320).mp3"));
+    second_music->setLoops(13);
+    second_music->play();
 }

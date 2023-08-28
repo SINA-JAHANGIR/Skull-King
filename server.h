@@ -10,8 +10,7 @@
 #include <thread>
 #include <QThread>
 #include <QSignalSpy>
-
-
+#include <QMediaPlayer>
 #include "game.h"
 #include "customized_button.h"
 #include "card.h"
@@ -26,7 +25,7 @@ class server : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit server(person,QWidget *parent = nullptr);
+    explicit server(person,QMediaPlayer*,QWidget *parent = nullptr);
     ~server();
 
 public slots:
@@ -67,6 +66,7 @@ private:
     QWidget *par;
     person person1;
     int num_player = 1 ;
+    QMediaPlayer* first_music;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

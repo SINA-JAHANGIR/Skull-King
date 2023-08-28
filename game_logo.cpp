@@ -12,6 +12,17 @@ game_logo::game_logo(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::game_logo)
 {
+    first_music = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    first_music->setAudioOutput(audioOutput);
+    connect(first_music, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    first_music->setSource(QUrl("qrc:/sounds/Taylor Davis - He's a Pirate (320).mp3"));
+    audioOutput->setVolume(100);
+    first_music->setPosition(500);
+    first_music->setLoops(3);
+    first_music->play();
+    Sleep(2000);
+
     ui->setupUi(this);
     this->setFixedSize(this->size());
     const QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
@@ -25,7 +36,7 @@ game_logo::game_logo(QWidget *parent) :
     lbl_logo->raise();
     lbl_logo->show();
     animation = new QPropertyAnimation(lbl_logo,"geometry");
-    animation->setDuration(1500);
+    animation->setDuration(2000);
     animation->setStartValue(QRect(width()/2-325,0,650,375));
     animation->setEndValue(QRect(width()/2-325,height()/2-400,1300,750));
     animation->start();
@@ -66,18 +77,18 @@ void game_logo::slo_next_page()
             p1.set_email(email);
             p1.set_coin(coin);
         }
-        MainWindow* main_page = new MainWindow(p1);
+        MainWindow* main_page = new MainWindow(p1,first_music);
         main_page->setWindowTitle("Skull King");
-        this->close();
+        this->hide();
         main_page->show();
         return;
     }
     else
     {
         gamer_file.close();
-        login* login_page = new login;
+        login* login_page = new login(first_music);
         login_page->setWindowTitle("Skull King");
-        this->close();
+        this->hide();
         login_page->show();
     }
 }

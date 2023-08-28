@@ -4,6 +4,8 @@
 #include <QPushButton>
 #include <QObject>
 #include "card.h"
+#include <QMediaPlayer>
+#include <QtMultimedia>
 
 class customized_button : public QPushButton
 {
@@ -11,6 +13,8 @@ class customized_button : public QPushButton
 private:
     int button_number;
     card button_card;
+    QMediaPlayer* card_sound;
+    QMediaPlayer* number_sound;
 public:
     customized_button(int);
     customized_button(card);

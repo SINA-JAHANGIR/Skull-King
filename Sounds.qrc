@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/sounds"/>
+    <qresource prefix="/">
+        <file>sounds/Klaus Badelt - He's a Pirate (320).mp3</file>
+        <file>sounds/Taylor Davis - He's a Pirate (320).mp3</file>
+        <file>sounds/card-sounds.mp3</file>
+        <file>sounds/pop-up-something.mp3</file>
+        <file>sounds/click-button.mp3</file>
+    </qresource>
+</RCC>

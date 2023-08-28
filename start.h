@@ -2,7 +2,7 @@
 #define START_H
 
 #include <QMainWindow>
-
+#include <QMediaPlayer>
 #include "server.h"
 #include "client.h"
 #include "start.h"
@@ -17,7 +17,7 @@ class start : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit start(person,QWidget *parent = nullptr);
+    explicit start(person,QMediaPlayer*,QWidget *parent = nullptr);
     ~start();
 
 
@@ -31,6 +31,7 @@ private:
     client *join;
     QWidget *par;
     person p1;
+    QMediaPlayer* first_music;
 };
 
 #endif // START_H

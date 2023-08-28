@@ -57,6 +57,7 @@ set(PROJECT_SOURCES
         start.cpp
         start.ui
         game_background.qrc
+        Sounds.qrc
         customized_button.h
         customized_button.cpp
 )
@@ -91,6 +92,9 @@ target_link_libraries(Skull-King PRIVATE Qt6::Network)
 
 find_package(Qt6 REQUIRED COMPONENTS Test)
 target_link_libraries(Skull-King PRIVATE Qt6::Test)
+
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
+target_link_libraries(Skull-King PRIVATE Qt6::Multimedia)
 
 set_target_properties(Skull-King PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

@@ -3,10 +3,11 @@
 #include "mainwindow.h"
 #include <QScreen>
 
-change::change(person per1,QWidget *parent) :
+change::change(person per1,QMediaPlayer* fmusic,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::change)
 {
+    first_music = fmusic;
     ui->setupUi(this);
     p1 = per1;
     par = parent;
@@ -29,6 +30,13 @@ change::~change()
 
 void change::on_btn_save_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     if (username == false || password == false || name == false || phone == false || email == false)
     {
         QMessageBox::warning(this,"ERROR !","Please fill out the form completely !");
@@ -164,7 +172,7 @@ void change::on_btn_save_clicked()
     }
     gamer_file.close();
     par->close();
-    MainWindow* main_page = new MainWindow(p1);
+    MainWindow* main_page = new MainWindow(p1,first_music);
     main_page->setWindowTitle("Skull King");
     this->close();
     main_page->show();
@@ -173,6 +181,13 @@ void change::on_btn_save_clicked()
 
 void change::on_btn_cancel_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     this->close();
     par->show();
 }

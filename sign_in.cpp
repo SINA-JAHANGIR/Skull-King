@@ -4,10 +4,11 @@
 #include "mainwindow.h"
 
 
-sign_in::sign_in(QWidget *parent) :
+sign_in::sign_in(QMediaPlayer* fmusic,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::sign_in)
 {
+    first_music = fmusic;
     ui->setupUi(this);
     par = parent;
     this->setFixedSize(this->size());
@@ -24,6 +25,13 @@ sign_in::~sign_in()
 
 void sign_in::on_btn_log_in_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     person p1;
     bool flag = true;
     QFile file("account.txt");
@@ -120,7 +128,7 @@ void sign_in::on_btn_log_in_clicked()
             p1.get_coin() ;
     }
     gamer_file.close();
-    MainWindow* main_page = new MainWindow(p1);
+    MainWindow* main_page = new MainWindow(p1,first_music);
     main_page->setWindowTitle("Skull King");
     this->close();
     main_page->show();
@@ -129,6 +137,13 @@ void sign_in::on_btn_log_in_clicked()
 
 void sign_in::on_btn_forgot_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     if (login_with == password)
     {
         ui->lbl_password->hide();
@@ -152,6 +167,13 @@ void sign_in::on_btn_forgot_clicked()
 
 void sign_in::on_btn_back_clicked()
 {
+    QMediaPlayer* click = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    audioOutput->setVolume(1);
+    click->setAudioOutput(audioOutput);
+    connect(click, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    click->setSource(QUrl("qrc:/sounds/click-button.mp3"));
+    click->play();
     this->close();
     par->show();
 }

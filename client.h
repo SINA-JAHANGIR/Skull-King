@@ -2,13 +2,12 @@
 #define CLIENT_H
 
 #include <QMainWindow>
-
+#include <QMediaPlayer>
 #include <QTcpSocket>
 #include <QByteArray>
 #include <QDataStream>
 #include <Thread>
 #include <QSignalSpy>
-
 #include "card.h"
 #include "game.h"
 #include "person.h"
@@ -22,7 +21,7 @@ class client : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit client(person,QWidget *parent = nullptr);
+    explicit client(person,QMediaPlayer*,QWidget *parent = nullptr);
     ~client();
 
 public slots:
@@ -63,6 +62,7 @@ private:
     QWidget *par;
     QThread *qth;
     person person1;
+    QMediaPlayer* first_music;
     // Functions :
     QByteArray card_to_qbytearray(const card&);
     card qbytearray_to_card(QByteArray&);

@@ -9,11 +9,12 @@
 #include <QSignalSpy>
 #include <QEventLoop>
 #include <QTimer>
-
 #include "customized_button.h"
 #include "card.h"
 #include "player.h"
 #include "person.h"
+#include <QMediaPlayer>
+#include <QtMultimedia>
 
 enum status {p1,p2,equal};
 
@@ -26,7 +27,7 @@ class game : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit game(person,QWidget *parent = nullptr);
+    explicit game(person,QMediaPlayer*,QWidget *parent = nullptr);
     ~game();
     // Functions :
     void game_server_start();
@@ -104,6 +105,8 @@ private:
     int timerCountdown = 11;
     QLabel* lbl_seconds_counter;
     QLabel* lbl_text_dialog;
+    QMediaPlayer* first_music;
+    QMediaPlayer* second_music;
     // Functions :
     void set_all_cards();
     void change_StyleSheet(customized_button*);

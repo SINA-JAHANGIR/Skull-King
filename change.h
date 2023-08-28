@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QRegularExpression>
 #include <QLabel>
+#include <QMediaPlayer>
 
 namespace Ui {
 class change;
@@ -16,7 +17,7 @@ class change : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit change(person,QWidget *parent = nullptr);
+    explicit change(person,QMediaPlayer*,QWidget *parent = nullptr);
     ~change();
 
 private slots:
@@ -38,7 +39,7 @@ private:
     bool name = false;
     bool phone = false;
     bool email = false;
-
+    QMediaPlayer* first_music;
     void change_label(QLabel*,QString,bool);
 };
 
