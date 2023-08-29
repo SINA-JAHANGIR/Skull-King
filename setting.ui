@@ -87,6 +87,9 @@
     <property name="text">
      <string>Back</string>
     </property>
+    <property name="shortcut">
+     <string>Esc</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="btn_change">
     <property name="enabled">

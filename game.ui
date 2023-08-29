@@ -61,6 +61,9 @@
     <property name="text">
      <string>Change</string>
     </property>
+    <property name="shortcut">
+     <string>Return</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="btn_stop">
     <property name="geometry">
@@ -84,6 +87,9 @@
     <property name="text">
      <string>Stop</string>
     </property>
+    <property name="shortcut">
+     <string>Space</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="btn_exit">
     <property name="geometry">
@@ -106,6 +112,9 @@
     </property>
     <property name="text">
      <string>Exit</string>
+    </property>
+    <property name="shortcut">
+     <string>Esc</string>
     </property>
    </widget>
   </widget>

@@ -39,6 +39,9 @@
     <property name="text">
      <string>Start</string>
     </property>
+    <property name="shortcut">
+     <string>Return</string>
+    </property>
    </widget>
    <widget class="QLabel" name="lbl_background">
     <property name="geometry">

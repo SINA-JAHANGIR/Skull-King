@@ -170,6 +170,9 @@
     <property name="text">
      <string>Log in</string>
     </property>
+    <property name="shortcut">
+     <string>Return</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="btn_forgot">
     <property name="geometry">
@@ -192,6 +195,9 @@
     </property>
     <property name="text">
      <string>Forgot password ?</string>
+    </property>
+    <property name="shortcut">
+     <string>Space</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_skull_king_2">
@@ -231,6 +237,9 @@
     </property>
     <property name="text">
      <string>Back</string>
+    </property>
+    <property name="shortcut">
+     <string>Esc</string>
     </property>
    </widget>
   </widget>

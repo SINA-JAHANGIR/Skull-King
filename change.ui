@@ -312,6 +312,9 @@
     <property name="text">
      <string>Save</string>
     </property>
+    <property name="shortcut">
+     <string>Return</string>
+    </property>
    </widget>
    <widget class="QLineEdit" name="line_username">
     <property name="geometry">
@@ -381,6 +384,9 @@
     </property>
     <property name="text">
      <string>Cancel</string>
+    </property>
+    <property name="shortcut">
+     <string>Esc</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_password_massage">
