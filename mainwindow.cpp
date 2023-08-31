@@ -85,5 +85,3 @@ void MainWindow::on_btn_exit_clicked()
 
 
 
-
-

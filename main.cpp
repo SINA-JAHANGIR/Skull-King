@@ -1,6 +1,6 @@
 #include "game_logo.h"
-
 #include <QApplication>
+#include <QForeach>
 
 int main(int argc, char *argv[])
 {

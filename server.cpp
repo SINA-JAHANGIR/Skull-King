@@ -2,6 +2,11 @@
 #include "ui_server.h"
 #include <QScreen>
 #include <windows.h>
+#include <QList>
+#include <QNetworkInterface>
+#include <QDebug>
+
+
 
 #define BACK "QPushButton{border-image: url(:/photos/back-of-card.png);}"
 const int w = 100 , a = (600/400) , h = a*w;
@@ -12,6 +17,31 @@ server::server(person per1,QMediaPlayer* fmusic,QWidget *parent) :
 {
     first_music = fmusic;
     ui->setupUi(this);
+
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    for(int i=0; i<interfaces.count(); i++)
+    {
+        if (interfaces[i].flags().testFlag(QNetworkInterface::IsUp) &&
+            interfaces[i].flags().testFlag(QNetworkInterface::IsRunning) &&
+            interfaces[i].type() == (QNetworkInterface::Wifi)) {
+
+            // Retrieve the list of addresses associated with the interface
+            QList<QNetworkAddressEntry> entries = interfaces[i].addressEntries();
+
+            for(int j=0; j<entries.count(); j++)
+            {
+                // Check if the address entry has a valid IP address
+                if (entries[j].ip().protocol() == QAbstractSocket::IPv4Protocol &&
+                    entries[j].ip() != QHostAddress::LocalHost &&
+                    entries[j].ip().toString() != "127.0.0.1") {
+
+
+                    ui->label_2->setText("Your IP-Address : "+entries[j].ip().toString());
+                }
+            }
+        }
+    }
+
     par = parent;
     person1 = per1;
     this->setFixedSize(this->size());
