@@ -1,11 +1,5 @@
 # Skull King
 
-## Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Installation & Setup](#installation-&-setup)
-- [How to Play](#how-to-play)
-
 ## 🎯 Overview
 **Skull King** is an engaging two-player card game inspired by the classic **Skull King**. This project was developed using **C++** and the **Qt framework** as a final project for an Advanced Programming (AP) course. Created in collaboration with my teammate under the team name **Alt+F4**, we have implemented a variety of enhancements that enrich the gameplay experience while preserving the fundamental mechanics of the original game.
 
@@ -49,12 +43,12 @@ Get up and running with **Skull King** in a few simple steps:
 
 I hope you enjoy this game:)
 
-![Skull-King Screenshot](Skull-King-Screenshot-1.png)
-![Skull-King Screenshot](Skull-King-Screenshot-2.png)
-![Skull-King Screenshot](Skull-King-Screenshot-3.png)
-![Skull-King Screenshot](Skull-King-Screenshot-4.png)
-![Skull-King Screenshot](Skull-King-Screenshot-5.png)
-![Skull-King Screenshot](Skull-King-Screenshot-6.png)
-![Skull-King Screenshot](Skull-King-Screenshot-7.png)
-![Skull-King Screenshot](Skull-King-Screenshot-8.png)
-![Skull-King Screenshot](Skull-King-Screenshot-9.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-1.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-2.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-3.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-4.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-5.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-6.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-7.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-8.png)
+![Skull-King Screenshot](Screenshots/Skull-King-Screenshot-9.png)
